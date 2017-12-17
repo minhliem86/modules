@@ -1,0 +1,51 @@
+{
+    "name": "minhliem/modules",
+    "description": "Modules for Laravel Framework",
+    "type": "modules",
+    "license": "v1.0",
+    "authors": [
+        {
+            "name": "Liem Phan",
+            "email": "minhliemphp@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "laravel/framework": "5.2.*",
+        "laravelcollective/html":"^5.2.0",
+        "edvinaskrucas/notification": "5.1.*",
+        "unisharp/laravel-filemanager": "^1.7",
+        "yajra/laravel-datatables-oracle": "6.*",
+        "developeruz/laravel-analytics": "2.3.1",
+        "codingo-me/dropzoner" : "1.0.0",
+        "santigarcor/laratrust": "5.0.*"
+    },
+    "extra" : {
+        "laravel" : {
+            "providers" : [
+                "Unisharp\\Laravelfilemanager\\LaravelFilemanagerServiceProvider",
+                "Intervention\\Image\\ImageServiceProvider",
+                "Collective\\Html\\HtmlServiceProvider",
+                "Zizaco\\Entrust\\EntrustServiceProvider",
+                "Krucas\\Notification\\NotificationServiceProvider",
+                "Yajra\\Datatables\\DatatablesServiceProvider",
+                "developeruz\\Analytics\\AnalyticsServiceProvider",
+                "Codingo\\Dropzoner\\DropzonerServiceProvider"
+            ],
+            "aliases": {
+                "Image" : "Intervention\\Image\\Facades\\Image",
+                "Form" : "Collective\\Html\\FormFacade",
+                "Html" : "Collective\\Html\\HtmlFacade",
+                "Entrust"   : "Zizaco\\Entrust\\EntrustFacade",
+                "Datatables" : "Yajra\\Datatables\\Facades\\Datatables",
+                "Analytics" : "developeruz\\Analytics\\AnalyticsFacade"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Modules\\": "app/Modules",
+            "Liemphan\\modules\\"  : "src/"
+        }
+    }
+}
