@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav navbar-right">
         <!-- <li class="disabled"><a href="#">Link</a></li> -->
         <li class="dropdown">
-          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::guard('admins')->user()->name}} <b class="caret"></b></a>
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::user()->name}} <b class="caret"></b></a>
           <ul role="menu" class="dropdown-menu">
             <li class="dropdown-header">Setting</li>
             <li><a href="{{route('admin.profile.index')}}">Profile</a></li>
