@@ -1,5 +1,5 @@
 <?php
-namespace liemphan\modules;
+namespace Liemphan\modules;
 use Illuminate\Support\ServiceProvider;
 class ModulesServiceProvider extends ServiceProvider{
     /**
