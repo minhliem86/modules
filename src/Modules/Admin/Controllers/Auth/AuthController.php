@@ -1,7 +1,7 @@
 <?php
 namespace App\Modules\Admin\Controllers\Auth;
 
-use App\Models\Admin;
+use App\Models\User;
 use Validator;
 use Auth;
 use App\Models\Role;
@@ -69,7 +69,7 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return Admin::create([
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
