@@ -34,8 +34,6 @@ class AuthController extends Controller
 
     protected $redirectPath = '/admin/dashboard';
 
-    protected $guard = 'admins';
-
     /**
      * Create a new authentication controller instance.
      *
@@ -44,7 +42,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('guest.admin', ['except' => 'logout']);
-        $this->auth = Auth::guard('admins');
+        $this->auth = Auth::guard('web');
     }
 
     /**

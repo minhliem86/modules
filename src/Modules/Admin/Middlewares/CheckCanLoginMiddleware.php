@@ -15,7 +15,7 @@ class CheckCanLoginMiddleware
      * @return mixed
      */
      public function __construct(){
-       $this->auth = Auth::guard('admins');
+       $this->auth = Auth::guard('web');
      }
     public function handle($request, Closure $next)
     {
