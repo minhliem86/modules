@@ -9,7 +9,7 @@
             "email": "minhliemphp@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "laravel/framework": "5.2.*",
         "laravelcollective/html":"^5.2.0",
