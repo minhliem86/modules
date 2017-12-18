@@ -13,7 +13,7 @@ class ModulesServiceProvider extends ServiceProvider{
         $this->publishes([__DIR__.'/Modules' => base_path('app/Modules')], 'module');
         $this->publishes([__DIR__.'/Repositories' => base_path('app/Repositories')], 'module_repo');
         $this->publishes([__DIR__.'/resources/assets' => public_path('/assets')], 'module_assets');
-        $this->publishes([__DIR__.'/resources/myLib' => base_path('/resources')], 'module_library');
+        $this->publishes([__DIR__.'/resources/myLib' => base_path('/resources/myLib')], 'module_library');
         $this->publishes([__DIR__.'/migrations' => base_path('database/migrations')], 'module_migration' );
         $this->publishes([__DIR__ . '/Models' => base_path('app/Models')], 'module_model');
         $this->publishes([__DIR__ . '/Providers/ComposerServiceProvider.php' => base_path('app/Providers')]);
