@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="#" class="navbar-brand">DASHBOARD</a>
+      <a href="#" class="navbar-brand">Admin Dashboard</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -17,12 +17,9 @@
       <ul class="nav navbar-nav navbar-right">
         <!-- <li class="disabled"><a href="#">Link</a></li> -->
         <li class="dropdown">
-          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::user()->name}} <b class="caret"></b></a>
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::admin()->get()->name}} <b class="caret"></b></a>
           <ul role="menu" class="dropdown-menu">
             <li class="dropdown-header">Setting</li>
-            @role('admin')
-            <li><a href="{{route('admin.profile.index')}}">User Management</a></li>
-            @endrole
             <li><a href="{{route('admin.profile.index')}}">Profile</a></li>
             <li class="divider"></li>
             <li ><a href="{{url('admin/logout')}}">SignOut</a></li>
