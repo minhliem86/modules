@@ -3,13 +3,13 @@ namespace App\Repositories;
 
 use App\Repositories\Contract\RestfulInterface;
 use App\Repositories\Eloquent\BaseRepository;
-use App\Models\Config;
+use App\Models\Example;
 
-class ConfigRepository extends BaseRepository implements RestfulInterface{
+class ExampleRepository extends BaseRepository implements RestfulInterface{
 
     public function getModel()
     {
-        return Config::class;
+        return Example::class;
     }
     // END
 

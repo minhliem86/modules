@@ -46,6 +46,14 @@
             <input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off" value="{{old('email')}}" />
           </div>
         </div>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon">
+              <i class="glyphicon glyphicon-user"></i>
+            </div>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username" autocomplete="off" value="{{old('username')}}" />
+          </div>
+        </div>
 
         <div class="form-group">
           <div class="input-group">

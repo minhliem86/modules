@@ -34,6 +34,7 @@ class AuthController extends Controller
 
     protected $redirectPath = '/admin/dashboard';
 
+
     /**
      * Create a new authentication controller instance.
      *
@@ -41,7 +42,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest.admin', ['except' => 'logout']);
+        $this->middleware('guest.admin', ['except' => ['registerByAdmin', 'logout']]);
         $this->auth = Auth::guard('web');
     }
 
@@ -56,6 +57,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
+            'username' => 'required|unique:users',
             'password' => 'required|min:6|confirmed',
             'role_id' => 'required'
         ]);
@@ -72,6 +74,7 @@ class AuthController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'username' => $data['username'],
             'password' => bcrypt($data['password']),
         ]);
     }
@@ -107,6 +110,22 @@ class AuthController extends Controller
 
         return redirect($this->redirectPath());
     }
+
+    public function registerByAdmin(Request $request)
+    {
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        $user = $this->create($request->all());
+        $role = Role::findOrFail($request->input('role_id'));
+        $user->attachRole($role);
+
+        return redirect()->route('admin.user.index')->with('success', 'User is created !');
+    }
+
     public function logout()
     {
       $this->auth->logout();

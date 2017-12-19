@@ -20,7 +20,7 @@ class AdminRedirectIfAuthMiddleware
     }
     public function handle($request, Closure $next)
     {
-        if($this->auth->check()){
+        if($this->auth->check() && $this->auth->user()->can('login')){
           return redirect('/admin/dashboard');
         }
         return $next($request);

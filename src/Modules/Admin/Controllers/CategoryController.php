@@ -55,10 +55,10 @@ class CategoryController extends Controller
            })->editColumn('avatar_img',function($cate){
              return '<img src="'.$cate->avatar_img.'" width="120" class="img-responsive">';
          })->filter(function($query) use ($request){
-            if (request()->has('name')) {
-                $query->where('title', 'like', "%{$request->input('name')}%");
-            }
-        })->setRowId('id')->make(true);
+                    if (request()->has('name')) {
+                        $query->where('title', 'like', "%{$request->input('name')}%");
+                    }
+                })->setRowId('id')->make(true);
     }
 
     /**

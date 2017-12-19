@@ -25,11 +25,18 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Modules\Admin\Controllers
     Route::post('/ajax-role', ['as' => 'admin.ajaxCreateRole', 'uses' => 'Auth\RoleController@postAjaxRole']);
     Route::post('/ajax-permission', ['as' => 'admin.ajaxCreatePermission', 'uses' => 'Auth\RoleController@postAjaxPermission']);
 
-    Route::group([], function(){
+    Route::group(["middleware" => "can_login"], function(){
 
-      Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'DashboardController@index']);
-      //   PORFILE
-      Route::get('/profile', ['as' => 'admin.profile.index', 'uses' => 'ProfileController@index']);
+        Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'DashboardController@index']);
+        //   PORFILE
+        Route::get('/profile', ['as' => 'admin.profile.index', 'uses' => 'ProfileController@index']);
+
+        /*USER MANAGEMENT*/
+        Route::get('user/getData', ['as' => 'admin.user.getData', 'uses' => 'UserManagementController@getData']);
+        Route::post('user/deleteAll', ['as' => 'admin.user.deleteAll', 'uses' => 'UserManagementController@deleteAll']);
+        Route::post('user/updateStatus', ['as' => 'admin.user.updateStatus', 'uses' => 'UserManagementController@updateStatus']);
+        Route::post('user/createUserByAdmin', ['as' => 'admin.user.createByAdmin', 'uses' => 'Auth\AuthController@registerByAdmin']);
+        Route::resource('/user','UserManagementController');
 
         // MULTI PHOTOs
         Route::get('photo', ['as'=>'admin.photo.index', 'uses'=>'MultiPhotoController@getIndex']);

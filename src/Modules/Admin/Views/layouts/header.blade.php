@@ -20,6 +20,9 @@
           <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::user()->name}} <b class="caret"></b></a>
           <ul role="menu" class="dropdown-menu">
             <li class="dropdown-header">Setting</li>
+            @role('admin')
+            <li><a href="{{route('admin.profile.index')}}">User Management</a></li>
+            @endrole
             <li><a href="{{route('admin.profile.index')}}">Profile</a></li>
             <li class="divider"></li>
             <li ><a href="{{url('admin/logout')}}">SignOut</a></li>
