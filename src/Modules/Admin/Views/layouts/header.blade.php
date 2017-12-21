@@ -17,8 +17,11 @@
       <ul class="nav navbar-nav navbar-right">
         <!-- <li class="disabled"><a href="#">Link</a></li> -->
         <li class="dropdown">
-          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::admin()->get()->name}} <b class="caret"></b></a>
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i> {{Auth::user()->name}} <b class="caret"></b></a>
           <ul role="menu" class="dropdown-menu">
+            @role('admin')
+            <li><a href="{{route('admin.user.index')}}">Quản lý Quản Trị Viên</a></li>
+            @endrole
             <li class="dropdown-header">Setting</li>
             <li><a href="{{route('admin.profile.index')}}">Profile</a></li>
             <li class="divider"></li>

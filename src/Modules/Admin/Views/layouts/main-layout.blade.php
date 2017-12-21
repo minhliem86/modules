@@ -22,18 +22,9 @@
     <![endif]-->
     <script type="text/javascript" src="{{asset('/public/assets/admin')}}/bootflat-admin/js/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="{{asset('/public/assets/admin')}}/dist/js/site.min.js"></script>
-    <script type="text/javascript" src="{{asset('/public/assets/admin')}}/dist/js/scroll/jquery.mCustomScrollbar.min.js"></script>
     <!-- CHART JS -->
     <script src="{{asset('/public/assets/admin')}}/dist/js/Chart.js"></script>
-    <script>
-      $(document).ready(function(){
-        $('.panel-body').mCustomScrollbar({
-            // scrollbarPosition: 'outside',
-            autoHideScrollbar: true,
-            scrollInertia: 250
-        })
-      })
-    </script>
+   
   </head>
   <body>
     @include('Admin::layouts.header')

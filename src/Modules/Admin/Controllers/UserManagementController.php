@@ -117,12 +117,10 @@ class UserManagementController extends Controller
     {
         $rule = [
             'name' => 'required',
-            'username' => 'required',
             'role_id' => 'required'
         ];
         $message = [
             'name.required' => 'Vui lòng nhập tên',
-            'username.required' => 'Vui lòng nhập Username',
             'role_id.required' => 'Vui lòng chọn 1 Role cho User'
         ];
         $valid = Validator::make($request->all(), $rule, $message);

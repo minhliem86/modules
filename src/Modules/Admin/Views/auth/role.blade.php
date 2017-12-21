@@ -25,7 +25,7 @@
 
     <script>
       $(document).ready(function(){
-        // CREATE ROLE
+       // CREATE ROLE
         $('#btn-role').click(function(){
           const rolename = $('input[name="role_name"]').val();
           const display_name = $('input[name="role_display"]').val();
@@ -36,6 +36,7 @@
             data: {name: rolename, display_name: display_name, description: description,  _token: $('meta[name="csrf-token"]').attr('content') },
             success: function(data){
                 $('input[name="role_name"]').val('');
+                $('input[name="role_display"]').val('');
                 $('textarea[name="role_description"]').val('');
                 if(data.error){
                   $('#role-show').append(`<div class="alert alert-danger alert-ajax">${data.rs.name}</div>`);
@@ -60,6 +61,7 @@
             data: {name: per_name, display_name: display_pers, description: per_description,  _token: $('meta[name="csrf-token"]').attr('content') },
             success: function(data){
                 $('input[name="permission_name"]').val('');
+                $('input[name="display_pers"]').val('');
                 $('textarea[name="permission_description"]').val('');
                 if(data.error){
                   $('#permission-show').append(`<div class="alert alert-danger alert-ajax">${data.rs.name}</div>`);
@@ -67,7 +69,6 @@
                 }else{
                   $('#permission-show').append(`<div class="alert alert-success alert-ajax">${data.rs}</div>`);
                   $('#permission_select').empty();
-                  console.log(data.per);
                   $('#permission_select').append(data.per);
                 }
                 hideAlert('.alert-ajax');

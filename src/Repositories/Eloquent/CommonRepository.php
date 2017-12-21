@@ -39,8 +39,8 @@ class CommonRepository{
   }
 
 
-  public function getPath($path, $removePath = '/laravel-filemanager/')
+   public function getPath($path, $replace = '', $removePath = '/laravel-filemanager/')
   {
-    return $str = str_replace($removePath,'',$path);
+    return $str = str_replace($removePath, $replace, $path);
   }
 }
