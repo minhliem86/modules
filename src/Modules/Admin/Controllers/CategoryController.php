@@ -33,32 +33,33 @@ class CategoryController extends Controller
     public function getData(Request $request)
     {
         $cate = DB::table('categories')->select(['id', 'title', 'avatar_img', 'order', 'status']);
-            return Datatables::of($cate)
+        return Datatables::of($cate)
             ->addColumn('action', function($cate){
-                return '<a href="'.route('admin.category.edit', $cate->id).'" class="btn btn-info btn-xs inline-block-span"> Edit </a>
+                return '<a href="'.route('admin.category.edit', $cate->id).'" class="btn btn-success btn-xs"><i class="fa fa-edit"></i> </a>
                 <form method="POST" action=" '.route('admin.category.destroy', $cate->id).' " accept-charset="UTF-8" class="inline-block-span">
                     <input name="_method" type="hidden" value="DELETE">
                     <input name="_token" type="hidden" value="'.csrf_token().'">
-                               <button class="btn  btn-danger btn-xs remove-btn" type="button" attrid=" '.route('admin.category.destroy', $cate->id).' " onclick="confirm_remove(this);" > Remove </button>
+                               <button class="btn  btn-danger btn-xs" type="button" attrid=" '.route('admin.category.destroy', $cate->id).' " onclick="confirm_remove(this);" > <i class="fa fa-trash"></i></button>
                </form>' ;
-           })->addColumn('order', function($cate){
-               return "<input type='text' name='order' class='form-control' data-id= '".$cate->id."' value= '".$cate->order."' />";
-           })->addColumn('status', function($cate){
-               $status = $cate->status ? 'checked' : '';
-               $cate_id =$cate->id;
-               return '
-                 <label class="toggle">
-                    <input type="checkbox" name="status" value="1" '.$status.'   data-id ="'.$cate_id.'">
-                    <span class="handle"></span>
-                  </label>
+            })->addColumn('order', function($cate){
+                return "<input type='text' name='order' class='form-control' data-id= '".$cate->id."' value= '".$cate->order."' />";
+            })->addColumn('status', function($cate){
+                $status = $cate->status ? 'checked' : '';
+                $cate_id =$cate->id;
+                return '
+                  <label class="switch switch-icon switch-success-outline">
+                    <input type="checkbox" class="switch-input" '.$status.' data-id="'.$cate_id.'">
+                    <span class="switch-label" data-on="" data-off=""></span>
+                    <span class="switch-handle"></span>
+                </label>
               ';
-           })->editColumn('avatar_img',function($cate){
-             return '<img src="'.$cate->avatar_img.'" width="120" class="img-responsive">';
-         })->filter(function($query) use ($request){
-                    if (request()->has('name')) {
-                        $query->where('title', 'like', "%{$request->input('name')}%");
-                    }
-                })->setRowId('id')->make(true);
+            })->editColumn('avatar_img',function($cate){
+                return '<img src="'.$cate->avatar_img.'" width="120" class="img-responsive">';
+            })->filter(function($query) use ($request){
+                if (request()->has('name')) {
+                    $query->where('title', 'like', "%{$request->input('name')}%");
+                }
+            })->setRowId('id')->make(true);
     }
 
     /**
@@ -127,11 +128,11 @@ class CategoryController extends Controller
     {
         $img_url = $this->common->getPath($request->input('img_url'));
         $data = [
-                'title' => $request->input('title'),
-                'slug' => \LP_lib::unicode($request->input('title')),
-                'avatar_img' => $img_url,
-                'order' => $request->input('order'),
-                'status' => $request->input('status'),
+            'title' => $request->input('title'),
+            'slug' => \LP_lib::unicode($request->input('title')),
+            'avatar_img' => $img_url,
+            'order' => $request->input('order'),
+            'status' => $request->input('status'),
         ];
         $this->cateRepo->update($data, $id);
         return redirect()->route('admin.category.index')->with('success', 'Updated !');
@@ -152,13 +153,13 @@ class CategoryController extends Controller
     /*DELETE ALL*/
     public function deleteAll(Request $request)
     {
-      if(!$request->ajax()){
-          abort(404);
-      }else{
-           $data = $request->arr;
-           $response = $this->cateRepo->deleteAll($data);
-           return response()->json(['msg' => 'ok']);
-      }
+        if(!$request->ajax()){
+            abort(404);
+        }else{
+            $data = $request->arr;
+            $response = $this->cateRepo->deleteAll($data);
+            return response()->json(['msg' => 'ok']);
+        }
     }
 
     /*UPDATE ORDER*/

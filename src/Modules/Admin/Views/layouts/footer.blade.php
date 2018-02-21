@@ -1,9 +1,4 @@
-<!--footer-->
-<div class="site-footer">
-  <div class="container">
-    <div class="copyright clearfix">
-      <p><b>Edited by RST</b></p>
-      <p>Code licensed under <a href="http://opensource.org/licenses/mit-license.html" target="_blank" rel="external nofollow">MIT License</a></p>
-    </div>
-  </div>
-</div>
+<footer class="app-footer">
+    <span><a href="http://coreui.io">CoreUI</a> © 2018 creativeLabs.</span>
+    <span class="ml-auto">Powered by <a href="http://coreui.io">CoreUI</a></span>
+</footer>
