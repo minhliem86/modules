@@ -18,6 +18,7 @@ class ModulesServiceProvider extends ServiceProvider{
         $this->publishes([__DIR__.'/Models' => base_path('app/Models')], 'module_model');
         $this->publishes([__DIR__.'/Providers/ComposerServiceProvider.php' => base_path('app/Providers')]);
         $this->publishes([__DIR__.'/ViewComposers' => base_path('app/ViewComposers')]);
+        $this->publishes([__DIR__.'/Kernel.php' => base_path('app/Http')]);
     }
     /**
      * Register the application services.
