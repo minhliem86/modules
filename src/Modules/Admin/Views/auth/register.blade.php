@@ -33,8 +33,7 @@
                 <div class="card-body p-4">
                     <h1>Register</h1>
                     <p class="text-muted">Create your account</p>
-                    <form class="form-signin" role="form" action="{{url('/admin/register')}}" method="POST">
-                        {!!  Form::token()!!}
+                        {!! Form::open(['route'=>'admin.register.post', 'class' =>'form']) !!}
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-user"></i></span>
@@ -71,7 +70,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-block btn-success">Tạo Tài Khoản</button>
-                    </form>
+                    {!! Form::close() !!}
                 </div>
                 @if($errors->any())
                     <div class="alert alert-danger">

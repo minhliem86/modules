@@ -9,7 +9,7 @@
 
     <ul class="nav navbar-nav d-md-down-none">
         <li class="nav-item px-3">
-            <a class="nav-link" href="{!! url('') !!}">Dashboard</a>
+            <a class="nav-link" href="{!! route('admin.dashboard') !!}">Dashboard</a>
         </li>
         <li class="nav-item px-3">
             <a class="nav-link" href="#">Users</a>

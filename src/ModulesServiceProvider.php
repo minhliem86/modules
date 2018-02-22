@@ -7,6 +7,12 @@ class ModulesServiceProvider extends ServiceProvider{
      *
      * @return void
      */
+
+    protected $command = [
+        'Liemphan\modules\Commands\AdminCommand',
+    ];
+
+
     public function boot()
     {
         $this->publishes([__DIR__.'/config/module.php' => config_path('module.php')], 'module_config');
@@ -27,6 +33,6 @@ class ModulesServiceProvider extends ServiceProvider{
      */
     public function register()
     {
-        //
+        $this->commands($this->commands);
     }
 }

@@ -32,69 +32,78 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" id="form-role" role="form" action="{{route('admin.postCreateRole')}}" method="POST">
-        {!!  Form::token()!!}
-        <fieldset class="role">
-            <legend class="form-signin-heading">Register New Role</legend>
-            <div class="form-group">
-                <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Role" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="role_display" id="role_display" placeholder="Display Name" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <textarea name="role_description" rows="3" class="form-control" placeholder="Role description (Opt)..."></textarea>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-lg btn-primary btn-block" id="btn-role" type="button">Create Role</button>
-            </div>
-            <div id="role-show"></div>
-        </fieldset>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-group">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="form-signin" id="form-role" role="form" action="{{route('admin.postCreateRole')}}" method="POST">
+                            {!!  Form::token()!!}
+                            <fieldset class="role">
+                                <legend class="form-signin-heading">Register New Role</legend>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Role" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="role_display" id="role_display" placeholder="Display Name" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="role_description" rows="3" class="form-control" placeholder="Role description (Opt)..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lg btn-primary btn-block" id="btn-role" type="button">Create Role</button>
+                                </div>
+                                <div id="role-show"></div>
+                            </fieldset>
 
-        <fieldset class="permission">
-            <legend class="form-signin-heading">Register New Permission</legend>
-            <div class="form-group">
-                <input type="text" class="form-control" name="permission_name" id="permission_name" placeholder="Permission" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="display_pers" id="display_pers" placeholder="Display Name" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <textarea name="permission_description" rows="3" class="form-control" placeholder="Permission description (Opt)..."></textarea>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-lg btn-primary btn-block" id="btn-permission" type="button">Create Permission</button>
-            </div>
+                            <fieldset class="permission">
+                                <legend class="form-signin-heading">Register New Permission</legend>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="permission_name" id="permission_name" placeholder="Permission" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="display_pers" id="display_pers" placeholder="Display Name" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="permission_description" rows="3" class="form-control" placeholder="Permission description (Opt)..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lg btn-primary btn-block" id="btn-permission" type="button">Create Permission</button>
+                                </div>
 
-            <div id="permission-show"></div>
-        </fieldset>
+                                <div id="permission-show"></div>
+                            </fieldset>
 
-        <fieldset class="assign">
-            <legend class="form-signin-heading">Assign Role & Permission</legend>
-            <div class="form-group" id="role_select">
-                @include('Admin::ajax.ajaxRole')
-            </div>
-            <div class="form-group" id="permission_select">
-                @include('Admin::ajax.ajaxPermission')
-            </div>
-            <div class="form-group">
-                <button class="btn btn-lg btn-primary btn-block" name="btn-submit" type="submit">Create Permission</button>
-            </div>
-            @if(!$errors->isEmpty())
-                <div class="form-group">
-                    <div class="alert alert-danger">
-                        @foreach($errors->all() as $error)
-                            <p>{{$error}}</p>
-                        @endforeach
+                            <fieldset class="assign">
+                                <legend class="form-signin-heading">Assign Role & Permission</legend>
+                                <div class="form-group" id="role_select">
+                                    @include('Admin::ajax.ajaxRole')
+                                </div>
+                                <div class="form-group" id="permission_select">
+                                    @include('Admin::ajax.ajaxPermission')
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lg btn-primary btn-block" name="btn-submit" type="submit">Create Permission</button>
+                                </div>
+                                @if(!$errors->isEmpty())
+                                    <div class="form-group">
+                                        <div class="alert alert-danger">
+                                            @foreach($errors->all() as $error)
+                                                <p>{{$error}}</p>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+
+                            </fieldset>
+
+                        </form>
                     </div>
                 </div>
-            @endif
-
-
-        </fieldset>
-
-    </form>
-
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Bootstrap and necessary plugins -->
 <script src="{!! asset('public/assets/admin') !!}/js/jquery-3.3.1.min.js"></script>
