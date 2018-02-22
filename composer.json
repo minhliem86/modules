@@ -2,7 +2,7 @@
     "name": "liemphan/modules",
     "description": "Modules for Laravel Framework",
     "type": "modules",
-    "license": "v1.0",
+    "license": "CPOL-1.02",
     "authors": [
         {
             "name": "Liem Phan",
