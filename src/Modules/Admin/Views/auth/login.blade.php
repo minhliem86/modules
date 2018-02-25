@@ -38,13 +38,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-envelope"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Email">
+                                <input type="text" class="form-control" placeholder="Email" name="email">
                             </div>
                             <div class="input-group mb-4">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-lock"></i></span>
                                 </div>
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
                             </div>
                             <div class="row">
                                 <div class="col-6">

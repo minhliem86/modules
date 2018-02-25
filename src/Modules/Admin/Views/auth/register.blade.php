@@ -38,28 +38,34 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-user"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Username">
+                            <input type="text" class="form-control" placeholder="Full name" name="name">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Username" name="username">
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">@</span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Email">
+                            <input type="text" class="form-control" placeholder="Email" name="email">
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-lock"></i></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="Password">
+                            <input type="password" class="form-control" placeholder="Password" name="password">
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-lock"></i></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="Repeat password">
+                            <input type="password" class="form-control" placeholder="Repeat password" name="password_confirmation">
                         </div>
 
                         <div class="input-group mb-4">
