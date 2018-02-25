@@ -49,8 +49,8 @@ class AdminCommand extends Command
         $role->save();
 
         $permission = new Permission;
-        $permission->name = 'login';
-        $permission->display_name = 'Login to Dashboard';
+        $permission->name = 'Login to Dashboard';
+        $permission->display_name = 'login';
         $permission->description = 'Login to DashBoard';
         $permission->save();
 
