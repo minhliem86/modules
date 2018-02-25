@@ -23,9 +23,6 @@ class CreateProductsTable extends Migration
             $table->string('show_number')->nullable()->default(0);
             $table->integer('order')->nullable();
             $table->boolean('status')->default();
-            $table->string('meta_keywords')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->string('meta_images')->nullable();
             $table->timestamps();
         });
     }
