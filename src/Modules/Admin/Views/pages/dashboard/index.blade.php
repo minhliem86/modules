@@ -1,4 +1,4 @@
-@extends('Admin::layouts.main-layout')
+@extends('Admin::layouts.default')
 
 @section('title','Dashboard')
 

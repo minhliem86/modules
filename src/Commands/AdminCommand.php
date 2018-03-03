@@ -43,8 +43,8 @@ class AdminCommand extends Command
     public function handle()
     {
         $role = new Role();
-        $role->name = 'admin';
-        $role->display_name = 'Administrator';
+        $role->name = 'Administrator';
+        $role->display_name = 'admin';
         $role->description = 'Dashboard Administration';
         $role->save();
 

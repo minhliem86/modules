@@ -8,75 +8,69 @@
 
 @section('content')
     <div class="row">
-      <div class="col-sm-12">
-        <form method="POST" action="{{route('admin.product.store')}}" id="form" role="form" class="form-horizontal" enctype="multipart/form-data">
-          {{Form::token()}}
-          <div class="form-group">
-            <label class="col-md-2 control-label">Sản phẩm</label>
-            <div class="col-md-10">
-              {{Form::text('title',old('title'), ['class'=>'form-control', 'placeholder'=>'Title'])}}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Mô tả</label>
-            <div class="col-md-10">
-                {{Form::textarea('description',old('description'), ['class'=>'form-control my-editor', 'placeholder' => 'Description'])}}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Giá</label>
-            <div class="col-md-10">
-              {{Form::text('price',old('price'), ['class'=>'form-control', 'placeholder'=>'Price'])}}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Hình đại diện</label>
-            <div class="col-md-10">
-                <div class="input-group">
-                 <span class="input-group-btn">
-                   <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                     <i class="fa fa-picture-o"></i> Chọn
-                   </a>
-                 </span>
-                 <input id="thumbnail" class="form-control" type="hidden" name="img_url">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Company</strong>
+                    <small>Form</small>
                 </div>
-                <img id="holder" style="margin-top:15px;max-height:100px;">
-            </div>
-          </div>
-          <div class="form-group">
-              <label class="col-md-2 control-label">Hình chi tiết </label>
-              <div class="col-md-10">
-                <input type="file" name="thumb-input[]" id="thumb-input" multiple >
-              </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Meta Keywords</label>
-            <div class="col-md-10">
-              {{Form::text('meta_keywords',old('meta_keywords'), ['class'=>'form-control', 'placeholder'=>'Keywords'])}}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Meta Description</label>
-            <div class="col-md-10">
-              {{Form::text('meta_description',old('meta_description'), ['class'=>'form-control', 'placeholder'=>'Description'])}}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-2 control-label">Meta Image</label>
-            <div class="col-md-10">
-                <div class="input-group">
-                 <span class="input-group-btn">
-                   <a id="lfm-meta" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                     <i class="fa fa-picture-o"></i> Chọn
-                   </a>
-                 </span>
-                 <input id="thumbnail" class="form-control" type="hidden" name="meta_image">
+                {!! Form::open() !!}
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" class="form-control" id="company" placeholder="Enter your company name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vat">VAT</label>
+                        <input type="text" class="form-control" id="vat" placeholder="PL1234567890">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="street">Street</label>
+                        <input type="text" class="form-control" id="street" placeholder="Enter street name">
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group col-sm-8">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city" placeholder="Enter your city">
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label for="postal-code">Postal Code</label>
+                            <input type="text" class="form-control" id="postal-code" placeholder="Postal Code">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label >Hình đại diện:</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-success">
+                                    <i class="fa fa-picture-o"></i> Chọn
+                                </a>
+                            </span>
+                            <input id="thumbnail" class="form-control" type="hidden" name="img_url">
+                        </div>
+                        <img id="holder" style="margin-top:15px;max-height:100px;">
+                    </div>
+                    <!--/.row-->
+
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" class="form-control" id="country" placeholder="Country name">
+                    </div>
+
                 </div>
-                <img id="holder" style="margin-top:15px;max-height:100px;">
+                <div class="card-footer">
+                    <a class="btn btn-sm btn-warning text-white" href="{!! url()->previous() !!}"><i class="fa fa-backward"></i> Cancel</a>
+                    <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
+                </div>
+                {!! Form::close() !!}
             </div>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
 @endsection
 
