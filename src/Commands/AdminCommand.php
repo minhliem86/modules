@@ -43,14 +43,14 @@ class AdminCommand extends Command
     public function handle()
     {
         $role = new Role();
-        $role->name = 'Administrator';
-        $role->display_name = 'admin';
+        $role->name = 'admin';
+        $role->display_name = 'Administrator';
         $role->description = 'Dashboard Administration';
         $role->save();
 
         $permission = new Permission;
-        $permission->name = 'Login to Dashboard';
-        $permission->display_name = 'login';
+        $permission->name = 'login';
+        $permission->display_name = 'Login Dashboard';
         $permission->description = 'Login to DashBoard';
         $permission->save();
 
@@ -62,6 +62,7 @@ class AdminCommand extends Command
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
         $user->attachRole($role);
+        $user->attachPermission($permission);
 
         $this->info('Admin Create Successfully.');
     }
