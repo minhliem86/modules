@@ -29,6 +29,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Modules\Admin\Controllers
             Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'DashboardController@index']);
             //   PORFILE
             Route::get('/profile', ['as' => 'admin.profile.index', 'uses' => 'ProfileController@index']);
+            Route::post('/profile/changePass', ['as' => 'admin.profile.changePass', 'uses' => 'ProfileController@postChangePass']);
 
             /*USER MANAGEMENT*/
             Route::get('user/getData', ['as' => 'admin.user.getData', 'uses' => 'UserManagementController@getData']);

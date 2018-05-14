@@ -2,7 +2,7 @@
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#"><img src="{!! asset('public/assets/admin/img/logo.png') !!}" class="img-fluid mx-auto" alt="#"> RST</a>
+    <a class="navbar-brand" href="{!! route('admin.dashboard') !!}"><img src="{!! asset('public/assets/admin/img/logo.png') !!}" class="img-fluid mx-auto" alt="RST"></a>
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,7 +12,7 @@
             <a class="nav-link" href="{!! route('admin.dashboard') !!}">Dashboard</a>
         </li>
         <li class="nav-item px-3">
-            <a class="nav-link" href="#">Users</a>
+            <a class="nav-link" href="{!! route('admin.profile.index') !!}">Users</a>
         </li>
     </ul>
     <ul class="nav navbar-nav ml-auto mr-4">
@@ -33,12 +33,9 @@
                 <div class="dropdown-header text-center">
                     <strong>Tài Khoản</strong>
                 </div>
-                <a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> Liên Hệ <span class="badge badge-info">42</span></a>
-                <div class="dropdown-header text-center">
-                    <strong>Cấu Hình</strong>
-                </div>
-                <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
-                <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
+
+                <a class="dropdown-item" href="{!! route('admin.profile.index') !!}"><i class="fa fa-user"></i> Profile</a>
+                <a class="dropdown-item" href="{!! route('admin.logout.post') !!}"><i class="fa fa-lock"></i> Logout</a>
             </div>
         </li>
     </ul>
