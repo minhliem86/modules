@@ -12477,5 +12477,10 @@ hr.transparent {
   font-size: 18px;
   text-transform: uppercase;
   font-weight: 600; }
+  .app-header.navbar .navbar-brand img {
+    max-width: 70px; }
+
+.table.beige {
+  background-color: beige; }
 
 /*# sourceMappingURL=style.css.map */

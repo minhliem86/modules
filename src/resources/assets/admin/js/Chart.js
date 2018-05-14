@@ -7541,7 +7541,7 @@ module.exports = function(Chart) {
 					var lastLabelWidth = computeTextSize(me.ctx, lastTick, tickFont.font);
 
 					// Ensure that our ticks are always inside the canvas. When rotated, ticks are right aligned which means that the right padding is dominated
-					// by the font height
+					// by the fonts height
 					if (me.labelRotation !== 0) {
 						me.paddingLeft = opts.position === 'bottom'? (cosRotation * firstLabelWidth) + 3: (cosRotation * lineSpace) + 3; // add 3 px to move away from canvas edges
 						me.paddingRight = opts.position === 'bottom'? (cosRotation * lineSpace) + 3: (cosRotation * lastLabelWidth) + 3;
@@ -7715,7 +7715,7 @@ module.exports = function(Chart) {
 			var cosRotation = Math.cos(labelRotationRadians);
 			var longestRotatedLabel = me.longestLabelWidth * cosRotation;
 
-			// Make sure we draw text in the correct color and font
+			// Make sure we draw text in the correct color and fonts
 			context.fillStyle = tickFontColor;
 
 			var itemsToDraw = [];
@@ -10399,7 +10399,7 @@ module.exports = function(Chart) {
 	/**
 	 * Helper function to get the box width based on the usePointStyle option
 	 * @param labelopts {Object} the label options on the legend
-	 * @param fontSize {Number} the label font size
+	 * @param fontSize {Number} the label fonts size
 	 * @return {Number} width of the color box area
 	 */
 	function getBoxWidth(labelOpts, fontSize) {
@@ -11377,7 +11377,7 @@ module.exports = function(Chart) {
 			if (me.isHorizontal()) {
 				maxTicks = Math.min(tickOpts.maxTicksLimit ? tickOpts.maxTicksLimit : 11, Math.ceil(me.width / 50));
 			} else {
-				// The factor of 2 used to scale the font size has been experimentally determined.
+				// The factor of 2 used to scale the fonts size has been experimentally determined.
 				var tickFontSize = helpers.getValueOrDefault(tickOpts.fontSize, Chart.defaults.global.defaultFontSize);
 				maxTicks = Math.min(tickOpts.maxTicksLimit ? tickOpts.maxTicksLimit : 11, Math.ceil(me.height / (2 * tickFontSize)));
 			}
@@ -11830,7 +11830,7 @@ module.exports = function(Chart) {
 			// Boolean - if true, show point labels
 			display: true,
 
-			// Number - Point label font size in pixels
+			// Number - Point label fonts size in pixels
 			fontSize: 10,
 
 			// Function - Used to convert point labels
@@ -12218,7 +12218,7 @@ module.exports = function(Chart) {
 				return 0; // null always in center
 			}
 
-			// Take into account half font size + the yPadding of the top value
+			// Take into account half fonts size + the yPadding of the top value
 			var scalingFactor = me.drawingArea / (me.max - me.min);
 			if (me.options.reverse) {
 				return (me.max - value) * scalingFactor;

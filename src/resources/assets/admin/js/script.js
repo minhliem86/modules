@@ -1,6 +1,7 @@
 function init_tinymce(url){
     var editor_config = {
         path_absolute : url,
+        height : "400",
         selector: "textarea.my-editor",
         plugins: [
         "advlist autolink lists link image charmap print preview hr anchor pagebreak",
@@ -40,3 +41,13 @@ function init_btnImage(url,target){
 function init_btnFile(url,target){
     $(target).filemanager('file',{prefix: url+'/laravel-filemanager'});
 }
+ /*CONFIG SEO*/
+$('.seo-container').hide();
+if($('input[name=seo_checking]').is(':checked')){
+    $('.seo-container').show();
+}
+$('input[name=seo_checking]').change(function(){
+    $('.seo-container').slideToggle() ;
+
+})
+
