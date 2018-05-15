@@ -1,85 +1,68 @@
-@extends('Admin::layouts.main-layout')
+@extends('Admin::layouts.default')
 
-@section('link')
-    <button class="btn btn-primary" onclick="submitForm();">Save</button>
-@stop
-
-@section('title','Create Category')
+@section('title','Danh Mục')
 
 @section('content')
     <div class="row">
-      <div class="col-sm-12">
-        <form method="POST" action="{{route('admin.category.store')}}" id="form" role="form" class="form-horizontal">
-          {{Form::token()}}
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" class="form-control" id="company" placeholder="Enter your company name">
+        <div class="col">
+            <div class="card">
+                {!! Form::open(['route'=>'admin.category.store', 'class' =>'form']) !!}
+                <div class="card-header">
+                    <strong>DANH MỤC SẢN PHẨM</strong>
                 </div>
-
-                <div class="form-group">
-                    <label for="vat">VAT</label>
-                    <input type="text" class="form-control" id="vat" placeholder="PL1234567890">
-                </div>
-
-                <div class="form-group">
-                    <label for="street">Street</label>
-                    <input type="text" class="form-control" id="street" placeholder="Enter street name">
-                </div>
-
-                <div class="row">
-
-                    <div class="form-group col-sm-8">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" placeholder="Enter your city">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="name">Tên Danh Mục</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="name">
+                        </div>
                     </div>
 
-                    <div class="form-group col-sm-4">
-                        <label for="postal-code">Postal Code</label>
-                        <input type="text" class="form-control" id="postal-code" placeholder="Postal Code">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="description">Mô Tả</label>
+                        <div class="col-md-9">
+                            {!! Form::textarea('description',old('description'), ['class'=>'form-control my-editor','rows' => 1,]) !!}
+
+                        </div>
                     </div>
 
-                </div>
-                <div class="form-group">
-                    <label >Hình đại diện:</label>
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                <i class="fa fa-picture-o"></i> Chọn
-                            </a>
-                        </span>
-                        <input id="thumbnail" class="form-control" type="hidden" name="img_url">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" >Hình đại diện:</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                            <span class="input-group-btn">
+                                <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary text-white">
+                                    <i class="fa fa-picture-o"></i> Chọn
+                                </a>
+                            </span>
+                                <input id="thumbnail" class="form-control" type="hidden" name="img_url">
+                            </div>
+                            <img id="holder" style="margin-top:15px;max-height:100px;">
+                        </div>
                     </div>
-                    <img id="holder" style="margin-top:15px;max-height:100px;">
+                    <!--/.row-->
                 </div>
-                <!--/.row-->
-
-                <div class="form-group">
-                    <label for="country">Country</label>
-                    <input type="text" class="form-control" id="country" placeholder="Country name">
+                <div class="card-footer">
+                    <div class="col-md-9 offset-md-3">
+                        <a href="{!! url()->previous() !!}" class="btn btn-danger text-white"><i class="fa fa-arrow-left"></i> Back</a>
+                        <button class="btn btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
+                    </div>
                 </div>
-
+                {!! Form::close() !!}
             </div>
-            <div class="card-footer">
-                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
-            </div>
-        </form>
-      </div>
+        </div>
     </div>
 @endsection
 
 @section('script')
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script src="{{asset('public')}}/vendor/laravel-filemanager/js/lfm.js"></script>
-    <script src="{{asset('public/assets/admin/dist/js/script.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/script.js')}}"></script>
     <script>
         const url = "{{url('/')}}"
         init_tinymce(url);
         // BUTTON ALONE
         init_btnImage(url,'#lfm');
-        // SUBMIT FORM
-        function submitForm(){
-         $('form').submit();
-        }
+
     </script>
 @stop

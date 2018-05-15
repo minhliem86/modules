@@ -6,18 +6,18 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\CategoryRepository;
+use App\Repositories\CategoriesRepository;
 use App\Repositories\Eloquent\CommonRepository;
 use Datatables;
 use DB;
 
 class CategoryController extends Controller
 {
-    protected $cateRepo;
+    protected $category;
     protected $common;
-    public function __construct(CategoryRepository $cate, CommonRepository $common)
+    public function __construct(CategoriesRepository $category, CommonRepository $common)
     {
-        $this->cateRepo = $cate;
+        $this->category = $category;
         $this->common = $common;
     }
     /**
@@ -25,41 +25,40 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('Admin::pages.category.index');
-    }
 
-    public function getData(Request $request)
+    public function index(Request $request)
     {
-        $cate = DB::table('categories')->select(['id', 'title', 'avatar_img', 'order', 'status']);
-        return Datatables::of($cate)
-            ->addColumn('action', function($cate){
-                return '<a href="'.route('admin.category.edit', $cate->id).'" class="btn btn-success btn-xs"><i class="fa fa-edit"></i> </a>
-                <form method="POST" action=" '.route('admin.category.destroy', $cate->id).' " accept-charset="UTF-8" class="inline-block-span">
+        if($request->ajax()){
+            $cate = $this->category->query(['id', 'name', 'img_url', 'order', 'status']);
+            return Datatables::of($cate)
+                ->addColumn('action', function($cate){
+                    return '<a href="'.route('admin.category.edit', $cate->id).'" class="btn btn-success btn-sm d-inline-block"><i class="fa fa-edit"></i> </a>
+                <form method="POST" action=" '.route('admin.category.destroy', $cate->id).' " accept-charset="UTF-8" class="d-inline-block">
                     <input name="_method" type="hidden" value="DELETE">
                     <input name="_token" type="hidden" value="'.csrf_token().'">
-                               <button class="btn  btn-danger btn-xs" type="button" attrid=" '.route('admin.category.destroy', $cate->id).' " onclick="confirm_remove(this);" > <i class="fa fa-trash"></i></button>
+                               <button class="btn  btn-danger btn-sm" type="button" attrid=" '.route('admin.category.destroy', $cate->id).' " onclick="confirm_remove(this);" > <i class="fa fa-trash"></i></button>
                </form>' ;
-            })->addColumn('order', function($cate){
-                return "<input type='text' name='order' class='form-control' data-id= '".$cate->id."' value= '".$cate->order."' />";
-            })->addColumn('status', function($cate){
-                $status = $cate->status ? 'checked' : '';
-                $cate_id =$cate->id;
-                return '
+                })->editColumn('order', function($cate){
+                    return "<input type='text' name='order' class='form-control' data-id= '".$cate->id."' value= '".$cate->order."' />";
+                })->editColumn('status', function($cate){
+                    $status = $cate->status ? 'checked' : '';
+                    $cate_id =$cate->id;
+                    return '
                   <label class="switch switch-icon switch-success-outline">
-                    <input type="checkbox" class="switch-input" '.$status.' data-id="'.$cate_id.'">
+                    <input type="checkbox" name="status" class="switch-input" '.$status.' data-id="'.$cate_id.'">
                     <span class="switch-label" data-on="" data-off=""></span>
                     <span class="switch-handle"></span>
                 </label>
               ';
-            })->editColumn('avatar_img',function($cate){
-                return '<img src="'.$cate->avatar_img.'" width="120" class="img-responsive">';
-            })->filter(function($query) use ($request){
-                if (request()->has('name')) {
-                    $query->where('title', 'like', "%{$request->input('name')}%");
-                }
-            })->setRowId('id')->make(true);
+                })->editColumn('img_url',function($cate){
+                    return '<img src="'.asset('public/uploads/'.$cate->img_url).'" width="120" class="img-responsive">';
+                })->filter(function($query) use ($request){
+                    if (request()->has('name')) {
+                        $query->where('name', 'like', "%{$request->input('name')}%");
+                    }
+                })->setRowId('id')->make(true);
+        }
+        return view('Admin::pages.category.index');
     }
 
     /**
@@ -82,15 +81,19 @@ class CategoryController extends Controller
     {
         if($request->has('img_url')){
             $img_url = $this->common->getPath($request->input('img_url'));
+        }else{
+            $img_url = '';
         }
-        $order = $this->cateRepo->getOrder();
+        $order = $this->category->getOrder();
+
         $data = [
-            'title' => $request->input('title'),
-            'slug' => \LP_lib::unicode($request->input('title')),
-            'avatar_img' => $img_url,
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'slug' => \LP_lib::unicode($request->input('name')),
+            'img_url' => $img_url,
             'order' => $order,
         ];
-        $this->cateRepo->create($data);
+        $this->category->create($data);
         return redirect()->route('admin.category.index')->with('success','Created !');
     }
 
@@ -113,7 +116,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $inst = $this->cateRepo->find($id);
+        $inst = $this->category->find($id);
         return view('Admin::pages.category.edit', compact('inst'));
     }
 
@@ -128,13 +131,14 @@ class CategoryController extends Controller
     {
         $img_url = $this->common->getPath($request->input('img_url'));
         $data = [
-            'title' => $request->input('title'),
-            'slug' => \LP_lib::unicode($request->input('title')),
-            'avatar_img' => $img_url,
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'slug' => \LP_lib::unicode($request->input('name')),
+            'img_url' => $img_url,
             'order' => $request->input('order'),
             'status' => $request->input('status'),
         ];
-        $this->cateRepo->update($data, $id);
+        $this->category->update($data, $id);
         return redirect()->route('admin.category.index')->with('success', 'Updated !');
     }
 
@@ -146,7 +150,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $this->cateRepo->delete($id);
+        $this->category->delete($id);
         return redirect()->route('admin.category.index')->with('success','Deleted !');
     }
 
@@ -157,7 +161,7 @@ class CategoryController extends Controller
             abort(404);
         }else{
             $data = $request->arr;
-            $response = $this->cateRepo->deleteAll($data);
+            $response = $this->category->deleteAll($data);
             return response()->json(['msg' => 'ok']);
         }
     }
@@ -174,7 +178,7 @@ class CategoryController extends Controller
                 $upt  =  [
                     'order' => $v,
                 ];
-                $obj = $this->cateRepo->find($k);
+                $obj = $this->category->find($k);
                 $obj->update($upt);
             }
             return response()->json(['msg' =>'ok', 'code'=>200], 200);
@@ -189,7 +193,7 @@ class CategoryController extends Controller
         }else{
             $value = $request->input('value');
             $id = $request->input('id');
-            $cate = $this->cateRepo->find($id);
+            $cate = $this->category->find($id);
             $cate->status = $value;
             $cate->save();
             return response()->json([
