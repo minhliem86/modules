@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Modules\Admin\Controllers;
-
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,71 +10,84 @@ use App\Repositories\PhotoRepository;
 use App\Repositories\Eloquent\CommonRepository;
 use Datatables;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    protected $_bigsize = 'public/upload/bigsize';
-    protected $_thumbnail = 'public/upload/thumbnails';
-    protected $productRepo;
+    protected $product;
     protected $common;
     protected $photo;
+    protected $_original_path;
+    protected $_thumbnail_path;
+    protected $_removePath;
 
     public function __construct(ProductRepository $product, CommonRepository $common, PhotoRepository $photo)
     {
-        $this->productRepo = $product;
+        $this->product = $product;
         $this->common = $common;
         $this->photo = $photo;
+        $this->_original_path = env('ORIGINAL_PATH');
+        $this->_thumbnail_path = env('THUMBNAIL_PATH');
+        $this->_removePath = env('REMOVE_PATH');
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()){
+            $product = $this->product->query(['products.id as id', 'products.name_vi as name_vi', 'products.img_url as img_url', 'products.quantity as quantity', 'products.sku as sku', 'products.order as order', 'products.status as status', 'products.hot as hot','products.promotion as promotion' , 'brand_id', 'brands.name_vi as brand_name'])->join('brands','brands.id', '=', 'products.brand_id');
+
+            return Datatables::of($product)
+                ->addColumn('action', function($product){
+                    return '<a href="'.route('admin.product.edit', $product->id).'" class="btn btn-success btn-sm d-inline-block"><i class="fa fa-edit"></i> </a>
+                <form method="POST" action=" '.route('admin.product.destroy', $product->id).' " accept-charset="UTF-8" class="d-inline-block">
+                    <input name="_method" type="hidden" value="DELETE">
+                    <input name="_token" type="hidden" value="'.csrf_token().'">
+                               <button class="btn  btn-danger btn-sm" type="button" attrid=" '.route('admin.product.destroy', $product->id).' " onclick="confirm_remove(this);" > <i class="fa fa-trash"></i></button>
+               </form>' ;
+                })->editColumn('order', function($product){
+                    return "<input type='text' name='order' class='form-control' data-id= '".$product->id."' value= '".$product->order."' />";
+                })->editColumn('status', function($product){
+                    $status = $product->status ? 'checked' : '';
+                    $product_id =$product->id;
+                    return '
+                  <label class="switch switch-icon switch-success-outline">
+                    <input type="checkbox" class="switch-input" name="status" '.$status.' data-id="'.$product_id.'">
+                    <span class="switch-label" data-on="" data-off=""></span>
+                    <span class="switch-handle"></span>
+                </label>
+              ';
+                })->editColumn('img_url',function($product){
+                    return '<img src="'.asset('public/uploads/'.$product->img_url).'" width="60" class="img-fluid">';
+                })->editColumn('hot', function($product){
+                    $hot = $product->hot ? 'checked' : '';
+                    $product_id =$product->id;
+                    return '
+                  <label class="switch switch-icon switch-success-outline">
+                    <input type="checkbox" class="switch-input" name="hot" '.$hot.' data-id="'.$product_id.'">
+                    <span class="switch-label" data-on="" data-off=""></span>
+                    <span class="switch-handle"></span>
+                </label>';
+                })->editColumn('promotion', function($product){
+                    $promotion = $product->promotion ? 'checked' : '';
+                    $product_id =$product->id;
+                    return '
+                  <label class="switch switch-icon switch-success-outline">
+                    <input type="checkbox" class="switch-input" name="promotion" '.$promotion.' data-id="'.$product_id.'">
+                    <span class="switch-label" data-on="" data-off=""></span>
+                    <span class="switch-handle"></span>
+                </label>';
+                })->filter(function($query) use ($request){
+                    if (request()->has('name')) {
+                        $query->where('name_vi', 'like', "%{$request->input('name')}%");
+                    }
+                })->setRowId('id')->make(true);
+        }
+
         return view('Admin::pages.product.index');
-    }
-
-    public function getData(Request $request)
-    {
-        $product = DB::table('products')->join('categories', 'products.category_id', '=','categories.id')->select(['products.id', 'products.title', 'products.avatar_img', 'products.price', 'products.order', 'products.status', 'products.hot']);
-
-        return Datatables::of($product)
-        ->addColumn('action', function($product){
-            return '<a href="'.route('admin.product.edit', $product->id).'" class="btn btn-info btn-xs inline-block-span"> Edit </a>
-            <form method="POST" action=" '.route('admin.product.destroy', $product->id).' " accept-charset="UTF-8" class="inline-block-span">
-                <input name="_method" type="hidden" value="DELETE">
-                <input name="_token" type="hidden" value="'.csrf_token().'">
-                           <button class="btn  btn-danger btn-xs remove-btn" type="button" attrid=" '.route('admin.product.destroy', $product->id).' " onclick="confirm_remove(this);" > Remove </button>
-           </form>' ;
-       })->editColumn('order', function($product){
-               return "<input type='text' name='order' class='form-control' data-id= '".$product->id."' value= '".$product->order."' />";
-       })->editColumn('status', function($product){
-           $status = $product->status ? 'checked' : '';
-           $product_id =$product->id;
-           return '
-             <label class="toggle">
-                <input type="checkbox" name="status" value="1" '.$status.'   data-id ="'.$product_id.'">
-                <span class="handle"></span>
-              </label>
-          ';
-      })->editColumn('hot', function($product){
-          $hot = $product->hot ? 'checked' : '';
-          $product_id =$product->id;
-          return '
-            <label class="toggle">
-               <input type="checkbox" name="hot" value="1" '.$hot.'   data-id ="'.$product_id.'">
-               <span class="handle"></span>
-             </label>
-         ';
-     })->editColumn('avatar_img',function($product){
-          return '<img src="'.asset('public/upload').'/'.$product->avatar_img.'" width="120" class="img-responsive">';
-        })->filter(function($query) use ($request){
-           if (request()->has('name')) {
-               $query->where('products.title', 'like', "%{$request->input('name')}%");
-           }
-       })->setRowId('id')->make(true);
-
     }
 
     /**
@@ -85,7 +97,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('Admin::pages.product.create');
+        $brands = DB::table('brands')->lists('name_vi','id');
+        return view('Admin::pages.product.create', compact('brands'));
     }
 
     /**
@@ -98,42 +111,69 @@ class ProductController extends Controller
     {
         if($request->has('img_url')){
             $img_url = $this->common->getPath($request->input('img_url'));
+            $thumb = $this->common->createThumbnail(asset('public/uploads/'.$img_url),$this->_thumbnail_path,350, 350, base_path($this->_removePath));
         }else{
           $img_url = "";
+          $thumb = "";
         }
-        if($request->has('meta_images')){
-            $meta_img = $this->common->getPath($request->input('meta_images'));
-        }else{
-          $meta_img = "";
-        }
-        $order = $this->productRepo->getOrder();
+        $order = $this->product->getOrder();
         $data = [
-            'title' => $request->input('title'),
-            'slug' => \LP_lib::unicode($request->input('title')),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'meta_keywords' => $request->input('meta_keywords'),
-            'meta_description' => $request->input('meta_description'),
-            'meta_images' => $meta_img,
-            'avatar_img' => $img_url,
+            'name_vi' => $request->input('name_vi'),
+            'name_en' => $request->input('name_en'),
+            'slug' => \LP_lib::unicode($request->input('name_vi')),
+            'description_vi' => $request->input('description_vi'),
+            'description_en' => $request->input('description_en'),
+            'content_vi' => $request->input('content_vi'),
+            'content_en' => $request->input('content_en'),
+            'sku' => strtoupper(str_replace(' ','', $request->input('sku'))),
+            'quantity' => $request->input('quantity'),
+            'price_vi' => floatval(str_replace(',','',$request->price_vi)),
+            'img_url' => $img_url,
+            'thumb_img_url' => $thumb,
             'order' => $order,
-            'category_id' => 1,
+            'brand_id' => $request->input('brand_id'),
         ];
-        $product = $this->productRepo->create($data);
+        $product = $this->product->create($data);
 
-        if($request->file('thumb-input')){
-          foreach($request->file('thumb-input') as $k=>$thumb){
-            $img = $this->common->uploadImage($request, $thumb, $this->_bigsize,$resize = false);
-            $thumbnail = $this->common->createThumbnail($img,$this->_thumbnail,100, 100);
+        $sub_photo = $request->file('thumb-input');
+        if($sub_photo[0]){
+            $data_photo = [];
+            foreach($sub_photo as $thumb){
+                $bigSize = $this->common->uploadImage($request, $thumb, $this->_original_path,$resize = false,null,null, base_path($this->_removePath));
+                $smallsize = $this->common->createThumbnail($bigSize,$this->_thumbnail_path,350, 350, base_path($this->_removePath));
+                $thumbsize = $this->common->createThumbnail($bigSize,$this->_thumbnail_path,85, 85, base_path($this->_removePath));
 
-            $order = $this->photo->getOrder();
-            $product->photos()->save(new \App\Models\Photo([
-              'img_url' => $this->common->getPath($img, asset('public/upload')),
-              'thumb_url' => $this->common->getPath($thumbnail, asset('public/upload')),
-              'order'=>$order,
-            ]));
-          }
+                $order = $this->photo->getOrder();
+                $filename = $this->common->getFileName($bigSize);
+                $data = new \App\Models\Photo(
+                    [
+                        'img_url' => $smallsize,
+                        'thumb_url' => $thumbsize,
+                        'big_url' => $bigSize,
+                        'order'=>$order,
+                        'filename' => $filename,
+                    ]
+                );
+                array_push($data_photo, $data);
+            }
+
+            $product->photos()->saveMany($data_photo);
         }
+
+        if($request->has('seo_checking')){
+            if($request->has('meta_img')){
+                $img_meta = $this->common->getPath($request->input('meta_img'));
+            }else{
+                $img_meta = '';
+            }
+            $data_seo = [
+                'meta_keyword' => $request->input('keywords'),
+                'meta_description' => $request->input('description'),
+                'meta_img' => $img_meta,
+            ];
+            $product->metas()->save(new \App\Models\Meta($data_seo));
+        }
+
         return redirect()->route('admin.product.index')->with('success','Created !');
     }
 
@@ -156,9 +196,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        // dd($this->productRepo->make(['photos'])->find(19));
-        $inst = $this->productRepo->find($id,['*'],['photos']);
-        return view('Admin::pages.product.edit', compact('inst'));
+        $brands = DB::table('brands')->lists('name_vi','id');
+        $inst = $this->product->find($id,['*'],['photos']);
+        return view('Admin::pages.product.edit', compact('inst', 'brands'));
     }
 
     /**
@@ -170,37 +210,73 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $img_url = $this->common->getPath($request->input('avatar_img'));
-        $meta_image = $this->common->getPath($request->input('meta_image'));
+        $img_url = $this->common->getPath($request->input('img_url'));
+        if($img_url){
+            $thumb = $this->common->createThumbnail(asset('public/uploads/'.$img_url),$this->_thumbnail_path,350, 350, base_path($this->_removePath));
+        }else{
+            $thumb = '';
+        }
 
         $data = [
-                'title' => $request->input('title'),
-                'slug' => \LP_lib::unicode($request->input('title')),
-                'description' => $request->input('description'),
-                'price' => $request->input('price'),
-                'category_id' => 1,
-                'avatar_img' => $img_url,
-                'meta_keywords' => $request->input('meta_keywords'),
-                'meta_description' => $request->input('meta_description'),
-                'meta_images' => $meta_image,
-                'order' => $request->input('order'),
-                'status' => $request->input('status'),
+            'name_vi' => $request->input('name_vi'),
+            'name_en' => $request->input('name_en'),
+            'slug' => \LP_lib::unicode($request->input('name_vi')),
+            'description_vi' => $request->input('description_vi'),
+            'description_en' => $request->input('description_en'),
+            'content_vi' => $request->input('content_vi'),
+            'content_en' => $request->input('content_en'),
+            'sku' => strtoupper(str_replace(' ','', $request->input('sku'))),
+            'quantity' => $request->input('quantity'),
+            'price_vi' => floatval(str_replace(',','',$request->price_vi)),
+            'img_url' => $img_url,
+            'thumb_img_url' => $thumb,
+            'order' => $request->input('order'),
+            'brand_id' => $request->input('brand_id'),
+            'status' => $request->input('status'),
         ];
-        $product = $this->productRepo->update($data, $id);
 
-        if($request->hasFile('thumb-input')){
-          foreach($request->file('thumb-input') as $k=>$thumb){
-            $img = $this->common->uploadImage($request, $thumb, $this->_bigsize,$resize = false);
-            $thumbnail = $this->common->createThumbnail($img,$this->_thumbnail,100, 100);
+        $product = $this->product->update($data, $id);
 
-            $order = $this->photo->getOrder();
-            $product->photos()->save(new \App\Models\Photo([
-              'img_url' => $this->common->getPath($img, asset('public/upload')),
-              'thumb_url' => $this->common->getPath($thumbnail, asset('public/upload')),
-              'order'=>$order,
-            ]));
-          }
+        $sub_photo = $request->file('thumb-input');
+
+        if($sub_photo[0]){
+            $data_photo = [];
+            foreach($sub_photo as $thumb){
+                $bigSize = $this->common->uploadImage($request, $thumb, $this->_original_path,$resize = false,null,null, base_path($this->_removePath));
+                $smallsize = $this->common->createThumbnail($bigSize,$this->_thumbnail_path,350, 350, base_path($this->_removePath));
+                $thumbsize = $this->common->createThumbnail($bigSize,$this->_thumbnail_path,85, 85, base_path($this->_removePath));
+                $order = $this->photo->getOrder();
+                $filename = $this->common->getFileName($bigSize);
+                $data = new \App\Models\Photo(
+                    [
+                        'img_url' => $smallsize,
+                        'thumb_url' => $thumbsize,
+                        'big_url' => $bigSize,
+                        'order'=>$order,
+                        'filename' => $filename,
+                    ]
+                );
+                array_push($data_photo, $data);
+            }
+            $product->photos()->saveMany($data_photo);
         }
+
+
+        if($request->has('seo_checking')){
+            $img_meta = $this->common->getPath($request->input('meta_img'));
+
+            $data_seo = [
+                'meta_keyword' => $request->input('keywords'),
+                'meta_description' => $request->input('description'),
+                'meta_img' => $img_meta,
+            ];
+            if(!$request->has('meta_id')){
+                $product->metas()->save(new \App\Models\Meta($data_seo));
+            }else{
+                \DB::table('metables')->where('id',$request->input('meta_id'))->update($data_seo);
+            }
+        }
+
         return redirect()->route('admin.product.index')->with('success', 'Updated !');
     }
 
@@ -212,7 +288,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $this->productRepo->delete($id);
+        $this->product->delete($id);
         return redirect()->route('admin.product.index')->with('success', 'Deleted !');
     }
 
@@ -223,7 +299,7 @@ class ProductController extends Controller
           abort(404);
       }else{
            $data = $request->arr;
-           $response = $this->productRepo->deleteAll($data);
+           $response = $this->product->deleteAll($data);
            return response()->json(['msg' => 'ok']);
       }
     }
@@ -240,7 +316,7 @@ class ProductController extends Controller
                 $upt  =  [
                     'order' => $v,
                 ];
-                $obj = $this->productRepo->find($k);
+                $obj = $this->product->find($k);
                 $obj->update($upt);
             }
             return response()->json(['msg' =>'ok', 'code'=>200], 200);
@@ -255,8 +331,26 @@ class ProductController extends Controller
         }else{
             $value = $request->input('value');
             $id = $request->input('id');
-            $cate = $this->productRepo->find($id);
+            $cate = $this->product->find($id);
             $cate->status = $value;
+            $cate->save();
+            return response()->json([
+                'mes' => 'Updated',
+                'error'=> false,
+            ], 200);
+        }
+    }
+
+    /*CHANGE PROMOTION*/
+    public function updatePromotion(Request $request)
+    {
+        if(!$request->ajax()){
+            abort('404', 'Not Access');
+        }else{
+            $value = $request->input('value');
+            $id = $request->input('id');
+            $cate = $this->product->find($id);
+            $cate->promotion = $value;
             $cate->save();
             return response()->json([
                 'mes' => 'Updated',
@@ -272,7 +366,7 @@ class ProductController extends Controller
         }else{
             $value = $request->input('value');
             $id = $request->input('id');
-            $cate = $this->productRepo->find($id);
+            $cate = $this->product->find($id);
             $cate->hot = $value;
             $cate->save();
             return response()->json([
@@ -288,12 +382,9 @@ class ProductController extends Controller
         if(!$request->ajax()){
             abort('404', 'Not Access');
         }else{
-            $id = $request->input('id_photo');
+            $id = $request->input('key');
             $this->photo->delete($id);
-            return response()->json([
-                'mes' => 'Deleted',
-                'error'=> false,
-            ], 200);
+            return response()->json(['success'],200);
         }
     }
 

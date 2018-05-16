@@ -1,6 +1,6 @@
-@extends('Admin::layouts.main-layout')
+@extends('Admin::layouts.default')
 
-@section('title','Quản lý Sản Phẩm')
+@section('title','SẢN PHẨM')
 
 @section('content')
     @if(Session::has('error'))
@@ -18,29 +18,34 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="wrap-center">
+                            <a href="{!! route('admin.product.create') !!}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Thêm</a>
+                            <button type="button" class="btn btn-warning btn-sm text-white" id="btn-updateOrder"><i class="fa fa-refresh"></i> Cập Nhật Thứ Tự</button>
+                        </div>
                         <div class="wrap-title">
-                            <strong>Company</strong>
-                            <small>Form</small>
+                            <strong>SẢN PHẨM</strong>
                         </div>
                         <div class="wrap-control">
-                            {{Html::link(route('admin.product.create'),'Add New',['class'=>'btn btn-primary btn-sm'])}}
-                            <button type="button" class="btn btn-danger btn-sm" id="btn-remove-all">Remove All Selected</button>
-                            <button type="button" class="btn btn-warning btn-sm" id="btn-updateOrder">Update Order</button>
+                            <button type="button" class="btn btn-danger btn-sm" id="btn-remove-all"><i class="fa fa-trash"></i> Xóa Chọn</button>
                         </div>
                     </div>
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <table class="table table-responsive-sm table-striped table-sm">
                         <thead>
                             <tr>
-                                <th width="5%">ID</th>
-                                <th width="20%"><i class="glyphicon glyphicon-search"></i> Sản phẩm</th>
-                                <th width="20%">Hình đại diện</th>
+                                <th>#</th>
+                                <th>Sản Phẩm</th>
+                                <th>Thương Hiệu</th>
+                                <th>Mã Sản Phẩm</th>
+                                <th>Số lượng tồn kho</th>
+                                <th width="120">Hình ảnh</th>
                                 <th width="10%">Sắp xếp</th>
                                 <th width="10%">Trạng thái</th>
-                                <th width="10%">Nổi bật</th>
-                                <th width="20%">&nbsp;</th>
+                                <th width="10%">Nổi Bật</th>
+                                <th width="10%">Khuyến Mãi</th>
+                                <th width="15%"></th>
                             </tr>
                     </table>
                 </div>
@@ -67,18 +72,22 @@
                 processing: true,
                 serverSide: true,
                 ajax:{
-                    url:  '{!! route('admin.product.getData') !!}',
+                    url:  '{!! route('admin.product.index') !!}',
                     data: function(d){
                         d.name = $('input[type="search"]').val();
                     }
                 },
                 columns: [
-                    {data: 'id', name: 'id', 'orderable': false},
-                    {data: 'title', name: 'title'},
-                    {data: 'avatar_img', name: 'Avatar Photo', 'orderable': false},
+                    {data: 'id', name: 'id', 'orderable': false, visible: false},
+                    {data: 'name_vi', name: 'name_vi', 'title': 'Sản Phẩm'},
+                    {data: 'brand_name', name: 'brand_name', 'title': 'Thương Hiệu'},
+                    {data: 'img_url', name: 'img_url', 'title': 'Hình Ảnh', 'orderable': false},
+                    {data: 'sku', name: 'sku', 'title': 'Mã Sản Phẩm'},
+                    {data: 'quantity', name: 'quantity', 'title': 'Số Lượng tồn kho'},
                     {data: 'order', name: 'order'},
                     {data: 'status', name: 'status', 'orderable': false},
-                    {data: 'hot', name: 'hot', 'orderable': false},
+                    {data: 'hot', name: 'hot', 'title': 'Nổi Bật', 'orderable': false},
+                    {data: 'promotion', name: 'promotion', 'title': 'SP Khuyến Mãi', 'orderable': false},
                     {data: 'action', name: 'action', 'orderable': false}
                 ],
                 initComplete: function(){
@@ -129,8 +138,8 @@
                         })
                     })
 
-                    $('input[name="status"]').change(function(){
-                        let value = 0;
+                    $('table.table').on('change','input[name=status]', function(){
+                        var value = 0;
                         if($(this).is(':checked')){
                             value = 1;
                         }
@@ -148,8 +157,28 @@
                             }
                         })
                     })
-                    $('input[name="hot"]').change(function(){
-                        let value = 0;
+                    $('table.table').on('change','input[name=promotion]', function(){
+                        var value = 0;
+                        if($(this).is(':checked')){
+                            value = 1;
+                        }
+                        const id_item = $(this).data('id');
+                        $.ajax({
+                            url: "{{route('admin.product.updatePromotionProduct')}}",
+                            type : 'POST',
+                            data: {value: value, id: id_item, _token:$('meta[name="csrf-token"]').attr('content')},
+                            success: function(data){
+                                if(!data.error){
+                                    alertify.success('Cập nhật thành công');
+                                }else{
+                                    alertify.error('Cập nhật thất bại');
+                                }
+                            }
+                        })
+                    })
+
+                    $('table.table').on('change','input[name=hot]', function(){
+                        var value = 0;
                         if($(this).is(':checked')){
                             value = 1;
                         }
