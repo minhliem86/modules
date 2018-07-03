@@ -14,7 +14,7 @@
         "laravel/framework": "5.2.*",
         "laravelcollective/html":"^5.2.0",
         "edvinaskrucas/notification": "5.1.*",
-        "unisharp/laravel-filemanager": "^1.7",
+        "unisharp/laravel-filemanager": "^1.8",
         "yajra/laravel-datatables-oracle": "6.*",
         "developeruz/laravel-analytics": "2.3.1",
         "codingo-me/dropzoner" : "1.0.0",
@@ -23,7 +23,6 @@
     "extra" : {
         "laravel" : {
             "providers" : [
-                "Unisharp\\Laravelfilemanager\\LaravelFilemanagerServiceProvider",
                 "Intervention\\Image\\ImageServiceProvider",
                 "Collective\\Html\\HtmlServiceProvider",
                 "Zizaco\\Entrust\\EntrustServiceProvider",
