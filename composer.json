@@ -12,8 +12,8 @@
     "minimum-stability": "stable",
     "require": {
         "laravel/framework": "5.2.*",
-        "laravelcollective/html":"^5.2.0",
-        "edvinaskrucas/notification": "5.1.*",
+        "laravelcollective/html":"^5.4.0",
+        "edvinaskrucas/notification": "5.2.*",
         "unisharp/laravel-filemanager": "^1.8",
         "yajra/laravel-datatables-oracle": "6.*",
         "developeruz/laravel-analytics": "2.3.1",
