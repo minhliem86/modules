@@ -16,7 +16,7 @@
         "edvinaskrucas/notification": "5.2.*",
         "unisharp/laravel-filemanager": "^1.8",
         "yajra/laravel-datatables-oracle": "6.*",
-        "developeruz/laravel-analytics": "2.3.1",
+        "spatie/laravel-analytics": "^3.6.*",
         "codingo-me/dropzoner" : "1.0.0",
         "santigarcor/laratrust": "5.0.*"
     },
@@ -28,7 +28,6 @@
                 "Zizaco\\Entrust\\EntrustServiceProvider",
                 "Krucas\\Notification\\NotificationServiceProvider",
                 "Yajra\\Datatables\\DatatablesServiceProvider",
-                "developeruz\\Analytics\\AnalyticsServiceProvider",
                 "Codingo\\Dropzoner\\DropzonerServiceProvider"
             ],
             "aliases": {
@@ -36,7 +35,6 @@
                 "Form" : "Collective\\Html\\FormFacade",
                 "Html" : "Collective\\Html\\HtmlFacade",
                 "Entrust"   : "Zizaco\\Entrust\\EntrustFacade",
-                "Datatables" : "Yajra\\Datatables\\Facades\\Datatables",
                 "Analytics" : "developeruz\\Analytics\\AnalyticsFacade"
             }
         }
