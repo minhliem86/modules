@@ -1,71 +1,73 @@
 <?php
-Route::group(['prefix' => 'admin', 'namespace' => 'App\Modules\Admin\Controllers'], function(){
-    // Authentication Routes...
-    Route::group(['middleware'=>['web']], function(){
-        Route::get('login',['as' => 'admin.login.get', 'uses' => 'Auth\AuthController@showLoginForm']);
-        Route::post('login',['as' => 'admin.login.post', 'uses' => 'Auth\AuthController@login']);
-        Route::get('logout', ['as' => 'admin.logout.post', 'uses' => 'Auth\AuthController@logout']);
+Route::namespace('App\Modules\Admin\Controllers')
+    ->prefix('admin')
+    ->middleware('web')
+    ->name('admin.')
+    ->group(function (){
+
+        // Authentication Routes...
+        Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
+        Route::post('login', 'Auth\LoginController@login')->name('login.post');
+        Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
         // Registration Routes...
-        Route::get('register', ['as' => 'admin.register.get', 'uses' => 'Auth\AuthController@showRegistrationForm']);
-        Route::post('register', ['as' => 'admin.register.post', 'uses' => 'Auth\AuthController@register']);
+        Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
+        Route::post('register', 'Auth\RegisterController@register')->name('register.post');
 
         // Password Reset Routes...
-        Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
-        Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
-        Route::post('password/reset', 'Auth\PasswordController@reset');
-
+        Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+        Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+        Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+        
         // Change Password
-        Route::post('/changePass', ['as' => 'admin.changePass.postChangePass', 'uses'=>'ProfileController@postChangePass']);
+        Route::post('/changePass', 'ProfileController@postChangePass')->name('changePass.postChangePass');
 
         /*ROLE, PERMISSION*/
-        Route::get('/create-role', ['as' => 'admin.createRole', 'uses' => 'Auth\RoleController@createRole']);
-        Route::post('/create-role', ['as' => 'admin.postCreateRole', 'uses' => 'Auth\RoleController@postCreateRole']);
-        Route::post('/ajax-role', ['as' => 'admin.ajaxCreateRole', 'uses' => 'Auth\RoleController@postAjaxRole']);
-        Route::post('/ajax-permission', ['as' => 'admin.ajaxCreatePermission', 'uses' => 'Auth\RoleController@postAjaxPermission']);
+        Route::get('/create-role', 'Auth\Role\RoleController@createRole')->name('createRole');
+        Route::post('/create-role','Auth\Role\RoleController@postCreateRole')->name('postCreateRole');
+        Route::post('/ajax-role', 'Auth\Role\RoleController@postAjaxRole')->name('ajaxCreateRole');
+        Route::post('/ajax-permission', 'Auth\Role\RoleController@postAjaxPermission')->name('ajaxCreatePermission');
 
-        Route::group(["middleware" => "can_login"], function(){
+        Route::middleware('can_login')
+            ->group(function (){
+                Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+                //   PORFILE
+                Route::get('/profile', 'ProfileController@index')->name('profile.index');
+                Route::post('/profile/changePass', 'ProfileController@postChangePass')->name('profile.changePass');
 
-            Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'DashboardController@index']);
-            //   PORFILE
-            Route::get('/profile', ['as' => 'admin.profile.index', 'uses' => 'ProfileController@index']);
-            Route::post('/profile/changePass', ['as' => 'admin.profile.changePass', 'uses' => 'ProfileController@postChangePass']);
+                /*USER MANAGEMENT*/
+                Route::get('user/getData',  'UserManagementController@getData')->name('user.getData');
+                Route::post('user/deleteAll', 'UserManagementController@deleteAll')->name('user.deleteAll');
+                Route::post('user/updateStatus', 'UserManagementController@updateStatus')->name('user.updateStatus');
+                Route::post('user/createUserByAdmin', 'Auth\AuthController@registerByAdmin')->name('user.createByAdmin');
+                Route::resource('/user','UserManagementController');
 
-            /*USER MANAGEMENT*/
-            Route::get('user/getData', ['as' => 'admin.user.getData', 'uses' => 'UserManagementController@getData']);
-            Route::post('user/deleteAll', ['as' => 'admin.user.deleteAll', 'uses' => 'UserManagementController@deleteAll']);
-            Route::post('user/updateStatus', ['as' => 'admin.user.updateStatus', 'uses' => 'UserManagementController@updateStatus']);
-            Route::post('user/createUserByAdmin', ['as' => 'admin.user.createByAdmin', 'uses' => 'Auth\AuthController@registerByAdmin']);
-            Route::resource('/user','UserManagementController');
+                // MULTI PHOTOs
+                Route::get('photo','MultiPhotoController@getIndex')->name('photo.index');
+                Route::get('photo/create', 'MultiPhotoController@getCreate')->name('photo.create');
+                Route::post('photo/create', 'MultiPhotoController@postCreate')->name('photo.postCreate');
+                Route::get('photo/edit/{id}','MultiPhotoController@getEdit')->name('photo.edit');
+                Route::put('photo/edit/{id}','MultiPhotoController@postEdit')->name('photo.update');
+                Route::delete('photo/delete/{id}', 'MultiPhotoController@destroy')->name('photo.destroy');
+                Route::post('photo/deleteAll', 'MultiPhotoController@deleteAll')->name('photo.deleteAll');
 
-            // MULTI PHOTOs
-            Route::get('photo', ['as'=>'admin.photo.index', 'uses'=>'MultiPhotoController@getIndex']);
-            Route::get('photo/create', ['as'=>'admin.photo.create', 'uses'=>'MultiPhotoController@getCreate']);
-            Route::post('photo/create', ['as'=>'admin.photo.postCreate', 'uses'=>'MultiPhotoController@postCreate']);
-            Route::get('photo/edit/{id}',['as' => 'admin.photo.edit', 'uses'=>'MultiPhotoController@getEdit']);
-            Route::put('photo/edit/{id}',['as' => 'admin.photo.update', 'uses'=>'MultiPhotoController@postEdit']);
-            Route::delete('photo/delete/{id}', ['as' => 'admin.photo.destroy', 'uses'=>'MultiPhotoController@destroy']);
-            Route::post('photo/deleteAll', ['as' => 'admin.photo.deleteAll', 'uses'=>'MultiPhotoController@deleteAll']);
+                /*CATEGORY*/
+                Route::post('category/deleteAll', 'CategoryController@deleteAll')->name('category.deleteAll');
+                Route::post('category/updateStatus', 'CategoryController@updateStatus')->name('category.updateStatus');
+                Route::post('category/postAjaxUpdateOrder', 'CategoryController@postAjaxUpdateOrder')->name('category.postAjaxUpdateOrder');
+                Route::resource('category', 'CategoryController');
 
-            /*CATEGORY*/
-            Route::post('category/deleteAll', ['as' => 'admin.category.deleteAll', 'uses' => 'CategoryController@deleteAll']);
-            Route::post('category/updateStatus', ['as' => 'admin.category.updateStatus', 'uses' => 'CategoryController@updateStatus']);
-            Route::post('category/postAjaxUpdateOrder', ['as' => 'admin.category.postAjaxUpdateOrder', 'uses' => 'CategoryController@postAjaxUpdateOrder']);
-            Route::resource('category', 'CategoryController');
+                /* COMPANY */
+                Route::any('company/{id?}', 'CompanyController@getInformation')->name('company.index');
 
-            /* COMPANY */
-            Route::any('company/{id?}', ['as' => 'admin.company.index', 'uses' => 'CompanyController@getInformation']);
-
-
-            /*PRODUCT*/
-            Route::post('product/deleteAll', ['as' => 'admin.product.deleteAll', 'uses' => 'ProductController@deleteAll']);
-            Route::post('product/postAjaxUpdateOrder', ['as' => 'admin.product.postAjaxUpdateOrder', 'uses' => 'ProductController@postAjaxUpdateOrder']);
-            Route::post('product/AjaxRemovePhoto', ['as' => 'admin.product.AjaxRemovePhoto', 'uses' => 'ProductController@AjaxRemovePhoto']);
-            Route::post('product/AjaxUpdatePhoto', ['as' => 'admin.product.AjaxUpdatePhoto', 'uses' => 'ProductController@AjaxUpdatePhoto']);
-            Route::post('product/updateStatus', ['as' => 'admin.product.updateStatus', 'uses' => 'ProductController@updateStatus']);
-            Route::post('product/updateHotProduct', ['as' => 'admin.product.updateHotProduct', 'uses' => 'ProductController@updateHotProduct']);
-            Route::resource('product', 'ProductController');
-
+                /*PRODUCT*/
+                Route::post('product/deleteAll', ['as' => 'admin.product.deleteAll', 'uses' => 'ProductController@deleteAll']);
+                Route::post('product/postAjaxUpdateOrder', ['as' => 'admin.product.postAjaxUpdateOrder', 'uses' => 'ProductController@postAjaxUpdateOrder']);
+                Route::post('product/AjaxRemovePhoto', ['as' => 'admin.product.AjaxRemovePhoto', 'uses' => 'ProductController@AjaxRemovePhoto']);
+                Route::post('product/AjaxUpdatePhoto', ['as' => 'admin.product.AjaxUpdatePhoto', 'uses' => 'ProductController@AjaxUpdatePhoto']);
+                Route::post('product/updateStatus', ['as' => 'admin.product.updateStatus', 'uses' => 'ProductController@updateStatus']);
+                Route::post('product/updateHotProduct', ['as' => 'admin.product.updateHotProduct', 'uses' => 'ProductController@updateHotProduct']);
+                Route::resource('product', 'ProductController');
+            });
         });
-    });
-});

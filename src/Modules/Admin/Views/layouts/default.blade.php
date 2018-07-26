@@ -16,7 +16,7 @@
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.png">
+    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.ico">
     <title>CoreUI - Admin Template - @yield('title')</title>
 
     <!-- Icons -->

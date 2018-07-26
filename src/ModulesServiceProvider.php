@@ -15,9 +15,11 @@ class ModulesServiceProvider extends ServiceProvider{
 
     public function boot()
     {
+        $this->publishes([__DIR__.'/config/auth.php' => config_path('auth.php')], 'auth_config');
         $this->publishes([__DIR__.'/config/module.php' => config_path('module.php')], 'module_config');
         $this->publishes([__DIR__.'/Modules' => base_path('app/Modules')], 'module');
         $this->publishes([__DIR__.'/Repositories' => base_path('app/Repositories')], 'module_repo');
+        $this->publishes([__DIR__.'/Notifications' => base_path('app/Notifications')], 'notification');
         $this->publishes([__DIR__.'/resources/assets' => public_path('/assets')], 'module_assets');
         $this->publishes([__DIR__.'/resources/myLib' => base_path('/resources/myLib')], 'module_library');
         $this->publishes([__DIR__.'/migrations' => base_path('database/migrations')], 'module_migration' );

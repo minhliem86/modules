@@ -16,7 +16,7 @@ class CheckIsAdminMiddleware
      */
     public function __construct()
     {
-        $this->auth = Auth::guard('web');
+        $this->auth = Auth::guard();
     }
 
     public function handle($request, Closure $next)
@@ -24,7 +24,7 @@ class CheckIsAdminMiddleware
         if(!$this->auth->check()){
             return redirect()->url('/admin/login');
         }else if (!$this->auth->user()->hasRole('admin')){
-            return redirect()->back()->with('error','You do not have permission');
+            return redirect()->back()->with('error','You do not admin role');
         }else{
             return $next($request);
         }

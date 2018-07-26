@@ -15,14 +15,14 @@ class CheckCanLoginMiddleware
      * @return mixed
      */
      public function __construct(){
-       $this->auth = Auth::guard('web');
+       $this->auth = Auth::guard();
      }
     public function handle($request, Closure $next)
     {
         if(!$this->auth->check()) return redirect('/admin/login')->withErrors('You must Login.');
         if(!$this->auth->user()->can('login')){
             $this->auth->logout();
-            return redirect('/admin/login')->withErrors('You do not have permission.');
+            return redirect('/admin/login')->withErrors('You do not have permission!');
         }
         return $next($request);
     }

@@ -11,6 +11,7 @@
       <div class="col-sm-12">
           <form class="form-signin" role="form" action="{{route('admin.user.createByAdmin')}}" method="POST">
               {{Form::token()}}
+              {!! Form::hidden('form_type', 'dashboard_create') !!}
               <h3 class="form-signin-heading">Register New User</h3>
               <div class="form-group">
                   <div class="input-group">
@@ -28,14 +29,14 @@
                       <input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off" value="{{old('email')}}" />
                   </div>
               </div>
-              <div class="form-group">
-                  <div class="input-group">
-                      <div class="input-group-addon">
-                          <i class="glyphicon glyphicon-user"></i>
-                      </div>
-                      <input type="text" class="form-control" name="username" id="username" placeholder="Username" autocomplete="off" value="{{old('username')}}" />
-                  </div>
-              </div>
+              {{--<div class="form-group">--}}
+                  {{--<div class="input-group">--}}
+                      {{--<div class="input-group-addon">--}}
+                          {{--<i class="glyphicon glyphicon-user"></i>--}}
+                      {{--</div>--}}
+                      {{--<input type="text" class="form-control" name="username" id="username" placeholder="Username" autocomplete="off" value="{{old('username')}}" />--}}
+                  {{--</div>--}}
+              {{--</div>--}}
 
               <div class="form-group">
                   <div class="input-group">

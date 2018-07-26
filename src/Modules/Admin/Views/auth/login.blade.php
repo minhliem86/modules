@@ -9,7 +9,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.png">
+    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.ico">
     <title>CoreUI - Admin Template</title>
 
     <!-- Icons -->
@@ -31,8 +31,8 @@
             <div class="card-group">
                 <div class="card">
                     <div class="card-body">
-                        <h1>Login</h1>
-                        <p class="text-muted">Sign In to your account</p>
+                        <h1>DASHBOARD</h1>
+                        <p class="text-muted">Đăng nhập với tài khoản admin</p>
                         {!! Form::open(['route'=>'admin.login.post', 'class' =>'form']) !!}
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -51,7 +51,7 @@
                                     <button type="submit" class="btn btn-primary px-4">Login</button>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <a href="{!! url('/admin/password/reset') !!}" class="btn btn-link px-0">Quên Mật Khẩu?</a>
+                                    <a href="{!! route('admin.password.request') !!}" class="btn btn-link px-0">Quên Mật Khẩu?</a>
                                 </div>
                             </div>
                         {!! Form::close() !!}

@@ -9,7 +9,7 @@
   <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
   <meta name="author" content="Łukasz Holeczek">
   <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-  <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.png">
+    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.ico">
   <title>CoreUI - Admin Template</title>
 
   <!-- Icons -->
@@ -31,21 +31,21 @@
         <div class="col-md-6">
             <div class="card mx-4">
                 <div class="card-body p-4">
-                    <h1>Register</h1>
-                    <p class="text-muted">Create your account</p>
+                    <h4>Đăng ký tài khoản</h4>
                         {!! Form::open(['route'=>'admin.register.post', 'class' =>'form']) !!}
+                            {!! Form::hidden('form_type', 'admin_create') !!}
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-user"></i></span>
                             </div>
                             <input type="text" class="form-control" placeholder="Full name" name="name">
                         </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="icon-user"></i></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Username" name="username">
-                        </div>
+                        {{--<div class="input-group mb-3">--}}
+                            {{--<div class="input-group-prepend">--}}
+                                {{--<span class="input-group-text"><i class="icon-user"></i></span>--}}
+                            {{--</div>--}}
+                            {{--<input type="text" class="form-control" placeholder="Username" name="username">--}}
+                        {{--</div>--}}
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">

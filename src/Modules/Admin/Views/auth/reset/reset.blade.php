@@ -8,7 +8,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.png">
+    <link rel="shortcut icon" href="{!! asset('public/assets/admin') !!}/img/favicon.ico">
     <title>CoreUI - Admin Template</title>
 
     <!-- Icons -->
@@ -26,10 +26,10 @@
     <div class="row">
         <div class="col-lg-6 col-md-8 mx-auto">
             <div class="py-4">
-                <form class="form-signin" role="form" action="{{url('/admin/password/reset')}}" method="POST">
+                <form class="form-signin" role="form" action="{!! route('admin.password.request') !!}" method="POST">
                     {{Form::token()}}
                     {{Form::hidden('token',$token)}}
-                    <h3 class="form-signin-heading">Enter you new password</h3>
+                    <h3 class="form-signin-heading">Khôi Phục Mật Khẩu</h3>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">

@@ -34,8 +34,8 @@
                     <strong>Tài Khoản</strong>
                 </div>
 
-                <a class="dropdown-item" href="{!! route('admin.profile.index') !!}"><i class="fa fa-user"></i> Profile</a>
-                <a class="dropdown-item" href="{!! route('admin.logout.post') !!}"><i class="fa fa-lock"></i> Logout</a>
+                <a class="dropdown-item" href="{!! route('admin.profile.index') !!}"><i class="fa fa-user"></i> Hồ sơ cá nhân</a>
+                <a class="dropdown-item" href="{!! route('admin.logout') !!}"><i class="fa fa-sign-out"></i> Thoát</a>
             </div>
         </li>
     </ul>
