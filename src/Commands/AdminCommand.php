@@ -48,21 +48,21 @@ class AdminCommand extends Command
         $role->description = 'Dashboard Administration';
         $role->save();
 
-        $permission = new Permission;
-        $permission->name = 'login';
-        $permission->display_name = 'Login Dashboard';
-        $permission->description = 'Login to DashBoard';
-        $permission->save();
+        // $permission = new Permission;
+        // $permission->name = 'login';
+        // $permission->display_name = 'Login Dashboard';
+        // $permission->description = 'Login to DashBoard';
+        // $permission->save();
 
-        $role->attachPermission($permission);
+        // $role->attachPermission($permission);
 
         $data['name'] = $this->ask('What your name ?','Admin');
         $data['email'] = $this->ask('What your email ?','admin@localhost.com');
-        $data['password'] = $this->ask('What is the password ?','1234567');
+        $data['password'] = $this->ask('What is the password ?','123456');
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
         $user->attachRole($role);
-        $user->attachPermission($permission);
+        // $user->attachPermission($permission);
 
         $this->info('Admin Create Successfully.');
     }

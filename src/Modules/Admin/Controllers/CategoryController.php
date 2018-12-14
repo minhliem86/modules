@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\CategoriesRepository;
+use App\Repositories\MetaRepository;
 use App\Repositories\Eloquent\CommonRepository;
 use Datatables;
 use DB;
@@ -79,6 +80,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'name' => 'unique:categories,name'
+        ];
+
+        $messages = [
+            'name.unique' => 'The name is exists'
+        ];
+
         if($request->has('img_url')){
             $img_url = $this->common->getPath($request->input('img_url'));
         }else{
@@ -93,7 +102,22 @@ class CategoryController extends Controller
             'img_url' => $img_url,
             'order' => $order,
         ];
-        $this->category->create($data);
+        $category = $this->category->create($data);
+
+        if($request->has('seo_checking') || $request->get('meta_keywords') || $request->input('meta_description') ){
+            if($request->has('meta_img')){
+                $meta_img = $this->common->getPath($request->input('meta_img'));
+            }else{
+                $meta_img = "";
+            }
+            $data_seo = [
+                'meta_keyword' => $request->input('meta_keywords'),
+                'meta_description' => $request->input('meta_description'),
+                'meta_img' => $meta_img,
+            ];
+            $category->meta_configs()->save(new \App\Models\MetaConfig($data_seo));
+        }
+
         return redirect()->route('admin.category.index')->with('success','Created !');
     }
 
@@ -130,6 +154,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $img_url = $this->common->getPath($request->input('img_url'));
+
         $data = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -138,7 +163,25 @@ class CategoryController extends Controller
             'order' => $request->input('order'),
             'status' => $request->input('status'),
         ];
-        $this->category->update($data, $id);
+
+        $category = $this->category->update($data, $id);
+
+        if($request->has('seo_checking') || $request->get('meta_keywords') || $request->input('meta_description') ){
+
+            $meta_img = $this->common->getPath($request->input('meta_img'));
+
+            $data_seo = [
+                'meta_keyword' => $request->input('meta_keywords'),
+                'meta_description' => $request->input('meta_description'),
+                'meta_img' => $meta_img,
+            ];
+
+            if(!$request->has('meta_config_id'))
+                $category->meta_configs()->save(new \App\Models\MetaConfig($data_seo));
+            else
+                $meta->update($data_seo,$request->input('meta_config_id'));
+        }
+
         return redirect()->route('admin.category.index')->with('success', 'Updated !');
     }
 
