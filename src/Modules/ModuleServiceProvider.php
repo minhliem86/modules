@@ -10,8 +10,7 @@ class ModuleServiceProvider extends ServiceProvider{
         //Load cai array modules trong file module.php trong thu muc config
         $modules = config('module.modules');
 
-       while (list(,$module) = each($modules)) {
-
+        foreach($modules as $module){
             // Load the routes for each of the modules
             if(file_exists(__DIR__.'/'.$module.'/routes.php')) {
                 include __DIR__.'/'.$module.'/routes.php';
