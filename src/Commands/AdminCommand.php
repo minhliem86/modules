@@ -48,11 +48,11 @@ class AdminCommand extends Command
         $role->description = 'Dashboard Administration';
         $role->save();
 
-        // $permission = new Permission;
-        // $permission->name = 'login';
-        // $permission->display_name = 'Login Dashboard';
-        // $permission->description = 'Login to DashBoard';
-        // $permission->save();
+         $permission = new Permission;
+         $permission->name = 'login';
+         $permission->display_name = 'Login Dashboard';
+         $permission->description = 'Login to DashBoard';
+         $permission->save();
 
         // $role->attachPermission($permission);
 
@@ -62,7 +62,7 @@ class AdminCommand extends Command
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
         $user->attachRole($role);
-        // $user->attachPermission($permission);
+        $user->attachPermission($permission);
 
         $this->info('Admin Create Successfully.');
     }

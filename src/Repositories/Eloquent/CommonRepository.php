@@ -7,19 +7,32 @@ use Validator;
 use Notification;
 
 class CommonRepository{
-    public function uploadImage($request, $file, $path, $resize = true, $width = null, $height = null, $removePath = ''){
-        $destinationPath = base_path($path);
+    public function uploadImage($request, $file, $path, $width = null, $height = null, $removePath = ''){
         $name = preg_replace('/\s+/', '', $file->getClientOriginalName());
         $filename = time().'_'.$name;
 
-        if($resize){
-            $filename_resize = $destinationPath.'/'.$filename;
-            \Image::make($file->getRealPath())->resize($width,$height)->save($filename_resize);
-        }else{
-            $img = $file->move($destinationPath,$filename);
+        $img = \Image::make($file->getRealPath());
+
+        $folder = $path . '/'.$width.'x'.$height;
+        $filesystem = new Filesystem();
+        if(!$filesystem->exists($folder)){
+            $filesystem->makeDirectory($folder, 0775, true);
         }
-        $img_url = $destinationPath.'/'.$filename;
-        return $this->getPath($img_url, '', $removePath);
+
+        $img->resize($width,$height, function ($constraint){
+            $constraint->aspectRatio();
+        })->save($folder.'/'.$filename);
+
+        $file->move($path,$filename);
+
+        $main_path = $this->getPath($path.'/'.$filename, '', $removePath);
+        $thumbnail_path = $this->getPath($path.'/thumbnails/'.$width.'x'.$height.'/'.$filename, '', $removePath);
+
+        return $response = [
+            'name' => $filename,
+            'path' => $main_path,
+            'thumbnail' => $thumbnail_path
+        ];
     }
 
     public function createThumbnail($fullfile, $location, $width = 500, $height = 250, $removePath = '')

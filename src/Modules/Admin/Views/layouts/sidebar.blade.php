@@ -9,6 +9,12 @@
                 Theme
             </li>
             <li class="nav-item">
+                <a href="{!! route("admin.photo-managment") !!}" class="nav-link {!! LP_lib::setActive('2','photo-managment') !!}"><i class="icon-drop"></i> Quản lý Hình Ảnh</a>
+            </li>
+            <li class="nav-item">
+                <a href="{!! route("admin.album.index") !!}" class="nav-link {!! LP_lib::setActive('2','album') !!}"><i class="icon-drop"></i> Thư viện</a>
+            </li>
+            <li class="nav-item">
                 <a href="colors.html" class="nav-link"><i class="icon-drop"></i> Product</a>
             </li>
             <li class="nav-title">
@@ -36,7 +42,7 @@
                 Extras
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#"><i class="icon-star"></i> Pages</a>
+                <a class="nav-link" href="#"><i class="icon-star"></i> Pages</a>
             </li>
         </ul>
     </nav>

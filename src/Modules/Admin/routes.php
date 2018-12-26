@@ -24,12 +24,15 @@ Route::namespace('App\Modules\Admin\Controllers')
         Route::post('/changePass', 'ProfileController@postChangePass')->name('changePass.postChangePass');
 
         /*ROLE, PERMISSION*/
-        Route::get('/create-role', 'Auth\Role\RoleController@createRole')->name('createRole');
-        Route::post('/create-role','Auth\Role\RoleController@postCreateRole')->name('postCreateRole');
-        Route::post('/ajax-role', 'Auth\Role\RoleController@postAjaxRole')->name('ajaxCreateRole');
-        Route::post('/ajax-permission', 'Auth\Role\RoleController@postAjaxPermission')->name('ajaxCreatePermission');
+        Route::middleware('ability:admin,login,require_all')->group(function () {
+            Route::get('/create-role', 'Auth\Role\RoleController@createRole')->name('createRole');
+            Route::post('/create-role','Auth\Role\RoleController@postCreateRole')->name('postCreateRole');
+            Route::post('/ajax-role', 'Auth\Role\RoleController@postAjaxRole')->name('ajaxCreateRole');
+            Route::post('/ajax-permission', 'Auth\Role\RoleController@postAjaxPermission')->name('ajaxCreatePermission');
+        });
 
-        Route::middleware('can_login')
+
+        Route::middleware('ability:admin,login,require_all')
             ->group(function (){
                 Route::get('dashboard', 'DashboardController@index')->name('dashboard');
                 //   PORFILE
@@ -60,6 +63,15 @@ Route::namespace('App\Modules\Admin\Controllers')
 
                 /* COMPANY */
                 Route::any('company/{id?}', 'CompanyController@getInformation')->name('company.index');
+
+                /*IMG MANAGMENT*/
+                Route::get('photo-managment','PhotoManagmentController@index')->name('photo-managment');
+
+                /*ALBUM*/
+                Route::post('album/deleteAll', 'AlbumController@deleteAll')->name('album.deleteAll');
+                Route::post('album/updateStatus', 'AlbumController@updateStatus')->name('album.updateStatus');
+                Route::post('album/postAjaxUpdateOrder', 'AlbumController@postAjaxUpdateOrder')->name('album.postAjaxUpdateOrder');
+                Route::resource('album', 'AlbumController');
 
                 /*PRODUCT*/
                 Route::post('product/deleteAll', ['as' => 'admin.product.deleteAll', 'uses' => 'ProductController@deleteAll']);
