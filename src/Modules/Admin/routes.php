@@ -70,7 +70,9 @@ Route::namespace('App\Modules\Admin\Controllers')
                 /*ALBUM*/
                 Route::post('album/deleteAll', 'AlbumController@deleteAll')->name('album.deleteAll');
                 Route::post('album/updateStatus', 'AlbumController@updateStatus')->name('album.updateStatus');
-                Route::post('album/postAjaxUpdateOrder', 'AlbumController@postAjaxUpdateOrder')->name('album.postAjaxUpdateOrder');
+                Route::post('album/postAjaxUpdateOrder', 'AlbumController@postAjaxUpdateOrder')->name('album.AjaxUpdateAlbum');
+                Route::post('album/AjaxRemovePhoto','AlbumController@AjaxRemovePhoto')->name('album.AjaxRemovePhoto');
+                Route::post('album/AjaxUpdatePhoto', 'AlbumController@AjaxUpdatePhoto')->name('album.AjaxUpdatePhoto');
                 Route::resource('album', 'AlbumController');
 
                 /*PRODUCT*/

@@ -110,7 +110,7 @@
                             data_order[id] = va;
                         });
                         $.ajax({
-                            url: '{{route("admin.album.postAjaxUpdateOrder")}}',
+                            url: '{{route("admin.album.AjaxUpdateAlbum")}}',
                             type:'POST',
                             data: {data: data_order },
                             success: function(rs){

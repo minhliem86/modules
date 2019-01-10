@@ -88,9 +88,9 @@
             '</div>';
 
         $("#photo-input").fileinput({
-            theme: 'fa',
+            theme: 'fas',
             uploadUrl: "{!!route('admin.album.store')!!}", // server upload action
-            uploadAsync: true,
+            uploadAsync: false,
             showUpload: false,
             showBrowse: false,
             showCaption: false,
@@ -111,7 +111,7 @@
             },
             previewSettings: {
                 image: {width: "200px", height: "150px", 'max-width': "120px", 'max-height': "100%"},
-            }
+            },
         })
 
     </script>

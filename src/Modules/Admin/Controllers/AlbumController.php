@@ -91,6 +91,7 @@ class AlbumController extends Controller
 
         $data_album = [
             'title' => $request->input('title'),
+            'slug' => \LP_lib::unicode($request->input('title')),
             'img_url' => $img_url,
             'order' => $order_album,
         ];
@@ -98,7 +99,6 @@ class AlbumController extends Controller
         $album = $this->album->create($data_album);
 
         $sub_photo = $request->file('photo-input');
-
 
         if($sub_photo[0]) {
             $title_img = $request->input('title_img');
@@ -129,48 +129,6 @@ class AlbumController extends Controller
         return redirect()->route('admin.album.index')->with('success','Created !');
 
     }
-//    public function store(Request $request)
-//    {
-//        $rules = [
-//            'name' => 'unique:categories,name'
-//        ];
-//
-//        $messages = [
-//            'name.unique' => 'The name is exists'
-//        ];
-//
-//        if($request->has('img_url')){
-//            $img_url = $this->common->getPath($request->input('img_url'));
-//        }else{
-//            $img_url = '';
-//        }
-//        $order = $this->album->getOrder();
-//
-//        $data = [
-//            'name' => $request->input('name'),
-//            'description' => $request->input('description'),
-//            'slug' => \LP_lib::unicode($request->input('name')),
-//            'img_url' => $img_url,
-//            'order' => $order,
-//        ];
-//        $album = $this->album->create($data);
-//
-//        if($request->has('seo_checking') || $request->get('meta_keywords') || $request->input('meta_description') ){
-//            if($request->has('meta_img')){
-//                $meta_img = $this->common->getPath($request->input('meta_img'));
-//            }else{
-//                $meta_img = "";
-//            }
-//            $data_seo = [
-//                'meta_keyword' => $request->input('meta_keywords'),
-//                'meta_description' => $request->input('meta_description'),
-//                'meta_img' => $meta_img,
-//            ];
-//            $album->meta_configs()->save(new \App\Models\MetaConfig($data_seo));
-//        }
-//
-//        return redirect()->route('admin.album.index')->with('success','Created !');
-//    }
 
     /**
      * Display the specified resource.
@@ -206,31 +164,59 @@ class AlbumController extends Controller
     {
         $img_url = $this->common->getPath($request->input('img_url'));
 
-        $data = [
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'slug' => \LP_lib::unicode($request->input('name')),
+        $data_album = [
+            'title' => $request->input('title'),
+            'slug' => \LP_lib::unicode($request->input('title')),
             'img_url' => $img_url,
             'order' => $request->input('order'),
             'status' => $request->input('status'),
         ];
 
-        $album = $this->album->update($data, $id);
+        $album = $this->album->update($data_album, $id);
 
-        if($request->has('seo_checking') || $request->get('meta_keywords') || $request->input('meta_description') ){
+//        if($request->has('seo_checking') || $request->get('meta_keywords') || $request->input('meta_description') ){
+//
+//            $meta_img = $this->common->getPath($request->input('meta_img'));
+//
+//            $data_seo = [
+//                'meta_keyword' => $request->input('meta_keywords'),
+//                'meta_description' => $request->input('meta_description'),
+//                'meta_img' => $meta_img,
+//            ];
+//
+//            if(!$request->has('meta_config_id'))
+//                $album->meta_configs()->save(new \App\Models\MetaConfig($data_seo));
+//            else
+//                $meta->update($data_seo,$request->input('meta_config_id'));
+//        }
 
-            $meta_img = $this->common->getPath($request->input('meta_img'));
+        $sub_photo = $request->file('photo-input');
 
-            $data_seo = [
-                'meta_keyword' => $request->input('meta_keywords'),
-                'meta_description' => $request->input('meta_description'),
-                'meta_img' => $meta_img,
-            ];
 
-            if(!$request->has('meta_config_id'))
-                $album->meta_configs()->save(new \App\Models\MetaConfig($data_seo));
-            else
-                $meta->update($data_seo,$request->input('meta_config_id'));
+        if($sub_photo[0]) {
+            $title_img = $request->input('title_img');
+            $data_photo = [];
+            foreach ($sub_photo as $k =>$thumb) {
+                $response = $this->common->uploadImage($request, $thumb, env("ORIGINAL_PHOTO"), 350, 350);
+                $order = $this->photo->getOrder();
+                if($order == 1){
+                    $order = $k + 1;
+                }else{
+                    $order = $order + $k;
+                }
+                $data = new \App\Models\Photo(
+                    [
+                        'title' => $title_img[$k],
+                        'img_url' => $response['path'],
+                        'thumb_url' =>  $response['thumbnail'],
+                        'order' => $order,
+                        'filename' => $response['name'],
+                    ]
+                );
+                array_push($data_photo, $data);
+            }
+
+            $album->photos()->saveMany($data_photo);
         }
 
         return redirect()->route('admin.album.index')->with('success', 'Updated !');
@@ -292,6 +278,35 @@ class AlbumController extends Controller
             $album->save();
             return response()->json([
                 'mes' => 'Updated',
+                'error'=> false,
+            ], 200);
+        }
+    }
+
+    /* REMOVE CHILD PHOTO */
+    public function AjaxRemovePhoto(Request $request)
+    {
+        if(!$request->ajax()){
+            abort('404', 'Not Access');
+        }else{
+            $id = $request->input('key');
+            $this->photo->delete($id);
+            return response()->json(['success'],200);
+        }
+    }
+
+    /* UPDATE CHILD PHOTO */
+    public function AjaxUpdatePhoto(Request $request)
+    {
+        if(!$request->ajax()){
+            abort('404', 'Not Access');
+        }else{
+            $id = $request->input('id_photo');
+            $order = $request->input('value');
+            $photo = $this->photo->update(['order'=>$order], $id);
+
+            return response()->json([
+                'mes' => 'Update Order',
                 'error'=> false,
             ], 200);
         }
