@@ -15,7 +15,7 @@ class ModulesServiceProvider extends ServiceProvider{
 
     public function boot()
     {
-        $this->publishes([__DIR__.'/.env' => base_path()], 'env_config');
+        $this->publishes([__DIR__.'/.env' => base_path('.env.php')], 'env_config');
         $this->publishes([__DIR__.'/config/auth.php' => config_path('auth.php')], 'auth_config');
         $this->publishes([__DIR__.'/config/module.php' => config_path('module.php')], 'module_config');
         $this->publishes([__DIR__.'/Modules' => base_path('app/Modules')], 'module');
