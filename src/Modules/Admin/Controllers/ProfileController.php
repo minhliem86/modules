@@ -12,11 +12,16 @@ use Validator;
 class ProfileController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->auth = Auth::guard('web');
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'old_password' => 'required',
-            'new_password' => 'required|confirmed',
+            'new_password' => 'required|confirmed|min:6',
         ]);
     }
 
@@ -32,14 +37,14 @@ class ProfileController extends Controller
         {
             return redirect()->back()->withErrors($validator->errors());
         }
-        if(! \Hash::check($request->input('old_password'), Auth::admin()->get()->password )){
+        if(! \Hash::check($request->input('old_password'),  $this->auth->user()->password )){
             return redirect()->back()->with('error', ' The old Password is Incorrect.');
         }
-        $user = Auth::admin()->get();
+        $user =  $this->auth->user();
         $user->password = bcrypt($request->input('new_password'));
         $user->save();
 
-        Auth::admin()->logout();
+        $this->auth->logout();
 
         return redirect('/admin/login')->with('sucess', 'Please login with new password');
     }

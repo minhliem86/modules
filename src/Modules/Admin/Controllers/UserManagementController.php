@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Controllers;
 
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,7 @@ class UserManagementController extends Controller
     {
         $this->middleware('check_admin');
         $this->user = $user;
+        $this->auth = Auth::guard('web');;
     }
 
     /**
@@ -28,35 +30,29 @@ class UserManagementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('Admin::pages.user.index');
-    }
-
-    public function getData(Request $request)
-    {
-        $user = User::wherePermissionIs('login')->whereNotIn('id',[Auth::user()->id])->select('id', 'name', 'email', 'created_at');
-        $datatable = Datatables::of($user)
-            ->editColumn('created_at', function($user){
-                return date_format(date_create($user->created_at), 'd/m//Y');
-            })
-            ->filter(function($query) use ($request){
-                if (request()->has('name')) {
-                    $query->where('name', 'like', "%{$request->input('name')}%");
-                }
-            })
-            ->addColumn('action', function($cate){
-                return '<a href="'.route('admin.user.edit', $cate->id).'" class="btn btn-info btn-xs inline-block-span"> Edit </a>
-                <form method="POST" action=" '.route('admin.user.destroy', $cate->id).' " accept-charset="UTF-8" class="inline-block-span">
+        if($request->ajax()){
+            $user = User::wherePermissionIs('login')->whereNotIn('id',[$this->auth->user()->id])->select('id', 'name', 'email', 'created_at');
+            return Datatables::of($user)
+                ->editColumn('created_at', function($user){
+                    return date_format(date_create($user->created_at), 'd/m/Y');
+                })
+                ->filter(function($query) use ($request){
+                    if (request()->has('name')) {
+                        $query->where('name', 'like', "%{$request->input('name')}%");
+                    }
+                })
+                ->addColumn('action', function($user){
+                    return '
+                <form method="POST" action=" '.route('admin.country.destroy', $user->id).' " accept-charset="UTF-8" class="d-inline-block">
                     <input name="_method" type="hidden" value="DELETE">
                     <input name="_token" type="hidden" value="'.csrf_token().'">
-                               <button class="btn  btn-danger btn-xs remove-btn" type="button" attrid=" '.route('admin.user.destroy', $cate->id).' " onclick="confirm_remove(this);" > Remove </button>
+                               <button class="btn  btn-danger btn-sm" type="button" attrid=" '.route('admin.user.destroy', $user->id).' " onclick="confirm_remove(this);" > <i class="fa fa-trash"></i></button>
                </form>' ;
-            })
-            ->make(true);
-
-        return $datatable;
-
+                })->setRowId('id')->make(true);
+        }
+        return view('Admin::pages.user.index');
     }
 
     /**
@@ -66,8 +62,7 @@ class UserManagementController extends Controller
      */
     public function create()
     {
-        $role = Role::lists('display_name','id')->toArray();
-        return view('Admin::pages.user.create', compact('role'));
+        return view('Admin::pages.user.create');
     }
 
     /**
@@ -78,7 +73,27 @@ class UserManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $valid = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email'
+        ]);
+        if($valid->fails()){
+            return back()->withInput()->withErrors($valid->errors());
+        }
+        $admin = Role::where('name','admin')->first();
+        $permission = Permission::where('name','login')->first();
+        $input = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt('123456'),
+        ];
 
+        $user = $this->user->create($input);
+
+        $user->attachRole($admin);
+        $user->attachPermission($permission);
+
+        return redirect()->route('admin.user.index');
     }
 
     /**

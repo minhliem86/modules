@@ -23,7 +23,7 @@
                                         <b><p class="title">Name:</p></b>
                                     </td>
                                     <td>
-                                        <p>Phan Minh Liem</p>
+                                        <p>{!! auth()->user()->name !!}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -31,7 +31,7 @@
                                         <b><p class="title">Email:</p></b>
                                     </td>
                                     <td>
-                                        <p>minhliemphp@gmail.com</p>
+                                        <p>{!! auth()->user()->email !!}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -39,14 +39,14 @@
                                         <b><p class="title">Create Date:</p></b>
                                     </td>
                                     <td>
-                                        <p>20-10-2018</p>
+                                        <p>{!! auth()->user()->created_at !!}</p>
                                     </td>
                                 </tr>
                             </table>
 
                         </div>
                         <div class="tab-pane fade" id="changePass">
-                            {{Form::open(['url' =>['/admin/test'], 'class' =>'form-changepass'  ] )}}
+                            {{Form::open(['route' =>'admin.changePass.postChangePass', 'class' =>'form-changepass'  ] )}}
                             <div class="form-group">
                                 <label for="old_password">Old Password</label>
                                 {{Form::password('old_password', ['class'=>'form-control', 'id' =>'old_password' ])}}
@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    @if($errors->has())
+    @if($errors->any())
         <div class="alert alert-danger alert-dismissable">
             @foreach($errors->all() as $error)
                 <p>{{$error}}</p>

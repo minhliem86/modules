@@ -51,7 +51,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
        'guest.admin' => \App\Modules\Admin\Middlewares\AdminRedirectIfAuthMiddleware::class,
 //        'can_login' => \App\Modules\Admin\Middlewares\CheckCanLoginMiddleware::class,
-//        'check_admin' => \App\Modules\Admin\Middlewares\CheckIsAdminMiddleware::class,
+        'check_admin' => \App\Modules\Admin\Middlewares\CheckIsAdminMiddleware::class,
         'role' => \Laratrust\Middleware\LaratrustRole::class,
         'permission' => \Laratrust\Middleware\LaratrustPermission::class,
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,
