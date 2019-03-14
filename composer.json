@@ -15,6 +15,7 @@
         "laravelcollective/html":"^5.4.0",
         "edvinaskrucas/notification": "5.2.*",
         "tcg/voyager": "^1.1",
+        "orangehill/iseed": "^2.6"
     },
     "extra" : {
         "laravel" : {
