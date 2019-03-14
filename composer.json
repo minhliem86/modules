@@ -14,28 +14,17 @@
         "laravel/framework": "5.4.*",
         "laravelcollective/html":"^5.4.0",
         "edvinaskrucas/notification": "5.2.*",
-        "unisharp/laravel-filemanager": "^1.8",
-        "yajra/laravel-datatables-oracle": "6.*",
-        "spatie/laravel-analytics": "3.6.2",
-        "codingo-me/dropzoner" : "1.0.0",
-        "santigarcor/laratrust": "5.0.*"
+        "tcg/voyager": "^1.1",
     },
     "extra" : {
         "laravel" : {
             "providers" : [
-                "Intervention\\Image\\ImageServiceProvider",
                 "Collective\\Html\\HtmlServiceProvider",
-                "Zizaco\\Entrust\\EntrustServiceProvider",
-                "Krucas\\Notification\\NotificationServiceProvider",
-                "Yajra\\Datatables\\DatatablesServiceProvider",
-                "Codingo\\Dropzoner\\DropzonerServiceProvider"
+                "TCG\\Voyager\\VoyagerServiceProvider"
             ],
             "aliases": {
-                "Image" : "Intervention\\Image\\Facades\\Image",
                 "Form" : "Collective\\Html\\FormFacade",
                 "Html" : "Collective\\Html\\HtmlFacade",
-                "Entrust"   : "Zizaco\\Entrust\\EntrustFacade",
-                "Analytics" : "developeruz\\Analytics\\AnalyticsFacade"
             }
         }
     },
